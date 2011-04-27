@@ -16,8 +16,11 @@
 IF(ZORBA_SUPPRESS_LIBTIDY)
   MESSAGE(STATUS "ZORBA_SUPPRESS_LIBTIDY is true - not searching for libTidy.")
 ELSE(ZORBA_SUPPRESS_LIBTIDY)
-
+    IF(WIN32)
+    INCLUDE (${CMAKE_SOURCE_DIR}/cmake_modules/Windows/FindLibTidy.cmake)
+    ELSE(WIN32)
     INCLUDE (${CMAKE_SOURCE_DIR}/cmake_modules/FindLibTidy.cmake)
+    ENDIF(WIN32)
   IF(LIBTIDY_FOUND)
     SET(HTML_LINK_LIBRARIES ${LIBTIDY_LIBRARIES})
 
