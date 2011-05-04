@@ -4,7 +4,7 @@ The text file is taken from http://data.gov.
 
 import schema namespace csv-options="http://www.zorba-xquery.com/modules/converters/csv-options";
 import module namespace zorba-csv = "http://www.zorba-xquery.com/modules/converters/csv";
-import module namespace file="http://www.zorba-xquery.com/modules/file";
+import module namespace file="http://expath.org/ns/file";
 
 zorba-csv:parse(file:read-text(fn:resolve-uri("PUAOSL95.TXT")), 
                     
