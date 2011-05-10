@@ -50,8 +50,10 @@ public:
   CSVModule();
   virtual ~CSVModule() {delete lParseFunc; delete lSerializeFunc;}
 
+  static const char* theModule;
+
   virtual zorba::String getURI() const
-  { return "http://www.zorba-xquery.com/modules/converters/csv"; }
+  { return theModule; }
 
   virtual zorba::StatelessExternalFunction*
   getExternalFunction(const zorba::String &aLocalname);
