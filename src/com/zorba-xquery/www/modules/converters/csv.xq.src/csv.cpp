@@ -212,7 +212,7 @@ void CSVOptions::parse(zorba::Item options_node, ItemFactory *item_factory)
       String errName("WrongParam");
       errWrongParamQName = item_factory->createQName(errNS, errName);
       String errDescription(lErrorMessage.str());
-      //ExternalFunctionData::error(errWrongParamQName, errDescription);
+      USER_EXCEPTION(errWrongParamQName, errDescription);
     }
     zorba::Item   xmlnode_item;
     if(getChild(options_node, "xml-nodes", "", xmlnode_item))
@@ -843,7 +843,7 @@ CSVParseFunction::evaluate(const Arguments_t& args,
     String errName("WrongParam");
     errWrongParamQName = theModule->getItemFactory()->createQName(errNS, errName);
     String errDescription(lErrorMessage.str());
-    //ExternalFunctionData::error(errWrongParamQName, errDescription);
+    USER_EXCEPTION(errWrongParamQName, errDescription);
 	
   }
   arg0_iter->close();
