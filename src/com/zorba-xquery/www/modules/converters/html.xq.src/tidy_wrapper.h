@@ -86,7 +86,7 @@ namespace zorba
     {
       if (ok != yes)
       {
-        throw USER_EXCEPTION( zerr::ZXQP0003_INTERNAL_ERROR, ERROR_PARAMS( "Could not set Tidy option" ) );
+        throw USER_EXCEPTION( zerr::ZXQP0003_INTERNAL_ERROR, "Could not set Tidy option" );
       }
     }
     
@@ -94,7 +94,7 @@ namespace zorba
     {
       if (rc > 1)
       {
-        throw USER_EXCEPTION(zerr::ZXQP0003_INTERNAL_ERROR, ERROR_PARAMS( errMsg ) );
+        throw USER_EXCEPTION(zerr::ZXQP0003_INTERNAL_ERROR, errMsg );
       }
     }
     
