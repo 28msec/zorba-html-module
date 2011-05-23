@@ -131,9 +131,9 @@ namespace zorba
           while (lAttributes->next(lAttr))
           {
             lAttr.getNodeName(lAttrName);
-            if(lAttrName.getLocalName().byteEqual("name",4))
+            if(lAttrName.getLocalName() == "name")
               lStrName = lAttr.getStringValue();
-            else if(lAttrName.getLocalName().byteEqual("value",5))
+            else if(lAttrName.getLocalName() == "value")
               lStrValue = lAttr.getStringValue();
           }
           setTidyOption(aDoc, lStrName.c_str(), lStrValue.c_str());

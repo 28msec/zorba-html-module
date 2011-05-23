@@ -56,11 +56,11 @@ CSVModule::getExternalFunction(const zorba::String &aLocalname)
 {
   if (1 == 0) {
   }
-  else if (aLocalname.equals("parse-internal")) {
+  else if (aLocalname == "parse-internal") {
     lParseFunc = new CSVParseFunction(this);
     return lParseFunc;
   }
-  else if (aLocalname.equals("serialize-internal")) {
+  else if (aLocalname == "serialize-internal") {
     lSerializeFunc = new CSVSerializeFunction(this);
     return lSerializeFunc;
   }
@@ -86,12 +86,12 @@ bool compareItemQName(Item item, const char *localname, const char *ns)
   Item node_name;
   item.getNodeName(node_name);
   String  item_namespace = node_name.getNamespace();
-  if(ns && ns[0] && !item_namespace.byteEqual(ns, (unsigned int)strlen(ns)))
+  if(ns && ns[0] && item_namespace != ns )
   {
     return false;
   }
   String  item_name = node_name.getLocalName();
-  if(!item_name.byteEqual(localname, (unsigned int)strlen(localname)))
+  if(item_name != localname)
   {
     return false;
   }
@@ -121,12 +121,12 @@ bool getChild(zorba::Iterator_t children, const char *localname, const char *ns,
     Item    child_name;
     child_item.getNodeName(child_name);
     String  item_namespace = child_name.getNamespace();
-    if(!item_namespace.byteEqual(ns, (unsigned int)strlen(ns)))
+    if(item_namespace != ns)
     {
       continue;//next child
     }
     String  item_name = child_name.getLocalName();
-    if(!item_name.byteEqual(localname, (unsigned int)strlen(localname)))
+    if(item_name != localname)
     {
       continue;//next child
     }
@@ -257,7 +257,7 @@ void CSVOptions::parse(zorba::Item options_node, ItemFactory *item_factory)
       String attr_value;
       if(getAttribute(columns_item, "align", attr_value))
       {
-        if(attr_value.byteEqual("right", 5))
+        if(attr_value == "right")
           align_right = true;
       }
       Iterator_t    children;
@@ -277,7 +277,7 @@ void CSVOptions::parse(zorba::Item options_node, ItemFactory *item_factory)
           column_positions.push_back(last_pos);
           if(getAttribute(column_item, "align", attr_value))
           {
-            if(attr_value.byteEqual("right", 5))
+            if(attr_value == "right")
               aligns.push_back(true);
             else
               aligns.push_back(false);
@@ -295,7 +295,7 @@ void CSVOptions::parse(zorba::Item options_node, ItemFactory *item_factory)
       String attr_value;
       if(getAttribute(columns_item, "align", attr_value))
       {
-        if(attr_value.byteEqual("right", 5))
+        if(attr_value == "right")
           align_right = true;
       }
       Iterator_t    children;
@@ -316,7 +316,7 @@ void CSVOptions::parse(zorba::Item options_node, ItemFactory *item_factory)
           column_positions.push_back(position);
           if(getAttribute(column_item, "align", attr_value))
           {
-            if(attr_value.byteEqual("right", 5))
+            if(attr_value == "right")
               aligns.push_back(true);
             else
               aligns.push_back(false);
@@ -1031,7 +1031,7 @@ std::string CSVSerializeFunction::StringStreamSequence::csv_quote_field(
 {
   const char *fieldstr = field.c_str();
   std::string   result;
-  result.reserve(field.bytes() + 10);
+  result.reserve(field.size() + 10);
   result.append(csv_options.quote_char);
   while(*fieldstr)
   {
@@ -1058,7 +1058,7 @@ void CSVSerializeFunction::StringStreamSequence::csv_write_line_to_string(std::v
   size_t addlen = 1;
   for(line_it = line.begin(); line_it != line.end(); line_it++)
   {
-    addlen += (*line_it).bytes() + csv_options.separator_size;
+    addlen += line_it->size() + csv_options.separator_size;
   }
   result_string.reserve(result_string.length() + addlen);
 

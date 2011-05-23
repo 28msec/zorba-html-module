@@ -110,7 +110,7 @@ HtmlModule::getExternalFunction(const String& aLocalname)
   {
     if (1 == 0)
     { }
-    else if (aLocalname.equals("parse-internal"))
+    else if (aLocalname == "parse-internal")
     {
       lFunc = new ParseFunction(this);
     }
