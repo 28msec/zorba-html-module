@@ -31,6 +31,7 @@
 #include <zorba/item_factory.h>
 #include <zorba/singleton_item_sequence.h>
 #include <zorba/empty_sequence.h>
+#include <zorba/zorba_functions.h>
 #include <zorba/file.h>
 
 #include "csv.h"
@@ -410,16 +411,16 @@ void CSVOptions::parse(zorba::Item options_node, ItemFactory *item_factory)
 void CSVParseFunction::CSVItemSequence::init(Item string_item,
                                         ItemFactory   *item_factory)
 {
-	if ( string_item.isStreamable() ) {
+  if ( string_item.isStreamable() ) {
     unsigned int max_len = csv_options.separator_size;
     if(max_len < csv_options.quote_char_size)
       max_len = csv_options.quote_char_size;
     if(max_len < csv_options.quote_escape_size)
       max_len = csv_options.quote_escape_size;
-		input_stream = new StreamWrapper(string_item, max_len);
-	} else {
+    input_stream = new StreamWrapper(string_item, max_len);
+  } else {
     input_stream = new CharPtrStream(string_item);
-	}
+  }
   this->item_factory = item_factory;
   line_index = 1;
 }
@@ -703,10 +704,10 @@ void CSVParseFunction::CSVItemSequence::open()
   is_open = true;
   if(open_count && !input_stream->reset())
   {
-	  std::stringstream lSs;
-	  lSs << "Cannot reset input stream for CSVParseFunction for second iterator open";
-	  Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "CSV001");
-	  throw USER_EXCEPTION( lQName, lSs.str());
+    std::stringstream lSs;
+    lSs << "Cannot reset input stream for CSVParseFunction for second iterator open";
+    Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "CSV001");
+    throw USER_EXCEPTION( lQName, lSs.str());
   }
   line_index = 1;
   open_count++;
@@ -734,10 +735,10 @@ bool CSVParseFunction::CSVItemSequence::next(Item& result)
 {
   if(!is_open)
   {
-	  std::stringstream lSs;
-	  lSs << "CSVParseFunction::CSVItemSequence Iterator consumed without open";
-	  Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "CSV002");
-	  throw USER_EXCEPTION( lQName, lSs.str()); 
+    std::stringstream lSs;
+    lSs << "CSVParseFunction::CSVItemSequence Iterator consumed without open";
+    Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "CSV002");
+    throw USER_EXCEPTION( lQName, lSs.str()); 
   }
   if(csv_options.first_row_is_header)
   {
@@ -844,7 +845,7 @@ CSVParseFunction::evaluate(const Arguments_t& args,
     errWrongParamQName = theModule->getItemFactory()->createQName(errNS, errName);
     String errDescription(lErrorMessage.str());
     USER_EXCEPTION(errWrongParamQName, errDescription);
-	
+  
   }
   arg0_iter->close();
  
@@ -910,8 +911,8 @@ void CSVSerializeFunction::StringStreamSequence::csv_get_headers(  Item node,
     else if(column_kind == store::StoreConsts::textNode)
     {
       String text_string = column.getStringValue();
-      String trimmed_text = text_string.trim();
-      if(!trimmed_text.empty())
+      zfn::trim( text_string );
+      if(!text_string.empty())
       {
         position++;
       }
@@ -989,10 +990,10 @@ void CSVSerializeFunction::StringStreamSequence::csv_write_line(
         if(line.size() >= header.size())
           return;
         String text_string = store_column.getStringValue();
-        String trimmed_text = text_string.trim();
-        if(!trimmed_text.empty())
+        zfn::trim( text_string );
+        if(!text_string.empty())
         {
-          line.push_back(trimmed_text);
+          line.push_back(text_string);
         }
       }
     }
@@ -1136,10 +1137,10 @@ void CSVSerializeFunction::StringStreamSequence::open()
     is->seekg(0);
     if(is->fail())
     {
-		std::stringstream lSs;
-	    lSs << "Cannot reset CSVSerialize streamable string item";
-	    Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "CSV003");
-	    throw USER_EXCEPTION( lQName, lSs.str());
+      std::stringstream lSs;
+      lSs << "Cannot reset CSVSerialize streamable string item";
+      Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "CSV003");
+      throw USER_EXCEPTION( lQName, lSs.str());
     }
   }
   open_count++;
@@ -1160,10 +1161,10 @@ bool CSVSerializeFunction::StringStreamSequence::next( Item &result )
 {
   if(!is_open)
   {
-	  std::stringstream lSs;
-	    lSs << "Next called on CSVSerializeFunction::StringStreamSequence iterator that is not open";
-	    Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "CSV004");
-	    throw USER_EXCEPTION( lQName, lSs.str());
+    std::stringstream lSs;
+    lSs << "Next called on CSVSerializeFunction::StringStreamSequence iterator that is not open";
+    Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "CSV004");
+    throw USER_EXCEPTION( lQName, lSs.str());
   }
   if(!has_next)
     return false;
@@ -1262,3 +1263,4 @@ CSVSerializeFunction::evaluate(const Arguments_t& args,
 extern "C" DLL_EXPORT zorba::ExternalModule* createModule() {
   return new zorba::csv::CSVModule();
 }
+/* vim:set et sw=2 ts=2: */
