@@ -113,7 +113,7 @@ bool getChild(zorba::Item &lItem, const char *localname, const char *ns,
 }
 
 bool getChild(zorba::Iterator_t children, const char *localname, const char *ns, 
-                           zorba::Item &child_item)
+              zorba::Item &child_item)
 {
   while(children->next(child_item))
   {

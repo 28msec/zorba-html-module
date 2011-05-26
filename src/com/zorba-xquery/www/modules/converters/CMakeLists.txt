@@ -16,11 +16,12 @@
 IF(ZORBA_SUPPRESS_LIBTIDY)
   MESSAGE(STATUS "ZORBA_SUPPRESS_LIBTIDY is true - not searching for libTidy.")
 ELSE(ZORBA_SUPPRESS_LIBTIDY)
-    IF(WIN32)
+  IF(WIN32)
     INCLUDE (${PROJECT_SOURCE_DIR}/cmake_modules/Windows/FindLibTidy.cmake)
-    ELSE(WIN32)
+  ELSE(WIN32)
     INCLUDE (${PROJECT_SOURCE_DIR}/cmake_modules/FindLibTidy.cmake)
-    ENDIF(WIN32)
+  ENDIF(WIN32)
+  
   IF(LIBTIDY_FOUND)
     SET(HTML_LINK_LIBRARIES ${LIBTIDY_LIBRARIES})
 
@@ -38,6 +39,56 @@ ELSE(ZORBA_SUPPRESS_LIBTIDY)
     MESSAGE(STATUS "LibTidy library not found -- if you want to use HTML Tidy functionality please set LIBTIDY_INCLUDE_DIR and LIBTIDY_LIBRARIES cmake parameters.")
   ENDIF(LIBTIDY_FOUND)
 ENDIF(ZORBA_SUPPRESS_LIBTIDY)
+
+
+
+# libxml and libxslt
+IF(ZORBA_SUPPRESS_LIBXSLT)
+  MESSAGE(STATUS "ZORBA_SUPPRESS_LIBXSLT is true - not searching for libxslt.")
+ELSE(ZORBA_SUPPRESS_LIBXSLT)
+
+  #
+  #  LibXml2 required by libxslt
+  #
+  MESSAGE(STATUS "Looking for LibXml2")
+  FIND_PACKAGE(LibXml2)
+  IF(LIBXML2_FOUND)
+    MESSAGE(STATUS "Found LIBXML2 library -- " ${LIBXML2_LIBRARIES})
+      
+    INCLUDE_DIRECTORIES(${LIBXML2_INCLUDE_DIR})
+    SET(requiredlibs-store ${requiredlibs-store} ${LIBXML2_LIBRARIES})
+    SET(CXXFLAGS ${CXXFLAGS} ${LIBXML2_DEFINITONS})
+  ELSE(LIBXML2_FOUND)
+    MESSAGE(FATAL_ERROR "The libxml2 library and headers are required in order to build xslt module.")
+  ENDIF(LIBXML2_FOUND)
+
+#
+#  LibXslt
+#
+  MESSAGE(STATUS "Looking for LibXslt")
+  IF(WIN32)
+    INCLUDE (${CMAKE_SOURCE_DIR}/cmake_modules/Windows/FindLibXslt.cmake)
+  ELSE(WIN32)
+    FIND_PACKAGE(LibXslt)
+  ENDIF(WIN32)
+
+  IF(LIBXSLT_FOUND)
+    MESSAGE(STATUS "Found LIBXSLT library -- " ${LIBXSLT_LIBRARIES})
+
+    INCLUDE_DIRECTORIES(${LIBXSLT_INCLUDE_DIR})
+    SET(requiredlibs ${requiredlibs} ${LIBXSLT_LIBRARIES})
+    SET(CXXFLAGS ${CXXFLAGS} ${LIBXSLT_DEFINITONS})
+
+    INCLUDE_DIRECTORIES("xslt.xq.src")
+
+    IF (BUILD_MODULE)
+      GENERATE_MODULE_LIBRARY(xslt "${LIBXSLT_LIBRARIES}")
+    ENDIF (BUILD_MODULE)
+
+  ELSE(LIBXSLT_FOUND)
+    MESSAGE(STATUS "LibXslt library not found -- if you want to use XSLT functionality please set LIBXSLT_INCLUDE_DIR and LIBXSLT_LIBRARIES cmake parameters.")
+  ENDIF(LIBXSLT_FOUND)
+ENDIF(ZORBA_SUPPRESS_LIBXSLT)
 
 
 GENERATE_MODULE_LIBRARY(csv "")
