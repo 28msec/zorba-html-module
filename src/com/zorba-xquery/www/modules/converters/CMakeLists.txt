@@ -41,7 +41,6 @@ ELSE(ZORBA_SUPPRESS_LIBTIDY)
 ENDIF(ZORBA_SUPPRESS_LIBTIDY)
 
 
-
 # libxml and libxslt
 IF(ZORBA_SUPPRESS_LIBXSLT)
   MESSAGE(STATUS "ZORBA_SUPPRESS_LIBXSLT is true - not searching for libxslt.")
@@ -50,8 +49,18 @@ ELSE(ZORBA_SUPPRESS_LIBXSLT)
   #
   #  LibXml2 required by libxslt
   #
-  MESSAGE(STATUS "Looking for LibXml2")
-  FIND_PACKAGE(LibXml2)
+  IF(NOT LIBXML2_FOUND)
+  
+    MESSAGE(STATUS "Looking for LibXml2")
+    
+    IF(WIN32)
+      INCLUDE (${CMAKE_SOURCE_DIR}/cmake_modules/Windows/FindLibXml2.cmake)
+    ELSE(WIN32)
+      FIND_PACKAGE(LibXml2)
+    ENDIF(WIN32)
+    
+  ENDIF(NOT LIBXML2_FOUND)
+         
   IF(LIBXML2_FOUND)
     MESSAGE(STATUS "Found LIBXML2 library -- " ${LIBXML2_LIBRARIES})
       
@@ -67,7 +76,7 @@ ELSE(ZORBA_SUPPRESS_LIBXSLT)
 #
   MESSAGE(STATUS "Looking for LibXslt")
   IF(WIN32)
-    INCLUDE (${CMAKE_SOURCE_DIR}/cmake_modules/Windows/FindLibXslt.cmake)
+    INCLUDE (${PROJECT_SOURCE_DIR}/cmake_modules/Windows/FindLibXslt.cmake)
   ELSE(WIN32)
     FIND_PACKAGE(LibXslt)
   ENDIF(WIN32)
@@ -99,3 +108,29 @@ CREATE_TEST_SOURCELIST(StreambufUnitTests StreambufUnitTests.cpp
 						)
 ADD_EXECUTABLE("StreambufUnitTests" ${StreambufUnitTests} csv.xq.src/stringiterator_streambuf.cpp)
 ADD_TEST("streamable_string_streambuf" StreambufUnitTests "streambuftest")
+
+
+# Jansson is required
+IF(ZORBA_SUPPRESS_JANSSON)
+  MESSAGE(STATUS "ZORBA_SUPPRESS_JANSSON is true - not searching for Jansson.")
+ELSE(ZORBA_SUPPRESS_JANSSON)
+
+    INCLUDE (${PROJECT_SOURCE_DIR}/cmake_modules/FindJansson.cmake)  
+     
+  IF(Jansson_FOUND)
+    SET(JSON_LINK_LIBRARIES ${Jansson_LIBRARIES})
+
+    SET(BUILD_MODULE 1)
+
+    INCLUDE_DIRECTORIES(${Jansson_INCLUDE_DIRS})
+
+    INCLUDE_DIRECTORIES("json.xq.src")
+
+    IF (BUILD_MODULE)
+      GENERATE_MODULE_LIBRARY(json "${Jansson_LIBRARIES}")
+    ENDIF (BUILD_MODULE)
+
+  ELSE(Jansson_FOUND)
+    MESSAGE(STATUS "Jansson library not found -- if you want to use Json functionality please set Jansson_INCLUDE_DIRS and Jansson_LIBRARIES cmake parameters.")
+  ENDIF(Jansson_FOUND)
+ENDIF(ZORBA_SUPPRESS_JANSSON)
