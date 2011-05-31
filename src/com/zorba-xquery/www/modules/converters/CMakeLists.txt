@@ -35,6 +35,8 @@ ELSE(ZORBA_SUPPRESS_LIBTIDY)
       GENERATE_MODULE_LIBRARY(html "${LIBTIDY_LIBRARIES}")
     ENDIF (BUILD_MODULE)
 
+    ADD_TEST_DIRECTORY("${PROJECT_SOURCE_DIR}/test_html")
+
   ELSE(LIBTIDY_FOUND)
     MESSAGE(STATUS "LibTidy library not found -- if you want to use HTML Tidy functionality please set LIBTIDY_INCLUDE_DIR and LIBTIDY_LIBRARIES cmake parameters.")
   ENDIF(LIBTIDY_FOUND)
@@ -94,6 +96,8 @@ ELSE(ZORBA_SUPPRESS_LIBXSLT)
       GENERATE_MODULE_LIBRARY(xslt "${LIBXSLT_LIBRARIES}")
     ENDIF (BUILD_MODULE)
 
+    ADD_TEST_DIRECTORY("${PROJECT_SOURCE_DIR}/test_xslt")
+
   ELSE(LIBXSLT_FOUND)
     MESSAGE(STATUS "LibXslt library not found -- if you want to use XSLT functionality please set LIBXSLT_INCLUDE_DIR and LIBXSLT_LIBRARIES cmake parameters.")
   ENDIF(LIBXSLT_FOUND)
@@ -129,6 +133,8 @@ ELSE(ZORBA_SUPPRESS_JANSSON)
     IF (BUILD_MODULE)
       GENERATE_MODULE_LIBRARY(json "${Jansson_LIBRARIES}")
     ENDIF (BUILD_MODULE)
+
+    ADD_TEST_DIRECTORY("${PROJECT_SOURCE_DIR}/test_json")
 
   ELSE(Jansson_FOUND)
     MESSAGE(STATUS "Jansson library not found -- if you want to use Json functionality please set Jansson_INCLUDE_DIRS and Jansson_LIBRARIES cmake parameters.")
