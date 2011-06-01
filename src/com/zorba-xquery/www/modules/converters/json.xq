@@ -118,8 +118,8 @@ declare variable $json:errWrongParam as xs:QName := fn:QName($json:jsonNS, "json
  :        "http://www.zorba-xquery.com/modules/converters/json-options" schema.
  : @return  a sequence of nodes according to either one of the mappings described above.
  : @error ZXQP0019 if any of the strings passed as parameter is not valid JSON.
- : @example rbkt/Queries/zorba/converters/jansson/parse_json_02.xq
- : @example rbkt/Queries/zorba/converters/jansson/parse_json_ml_01.xq
+ : @example test_json/Queries/converters/jansson/parse_json_02.xq
+ : @example test_json/Queries/converters/jansson/parse_json_ml_01.xq
  :)
 declare function json:parse(
   $arg as xs:string?,
@@ -149,7 +149,7 @@ declare function json:parse(
  : @param $arg a sequence of valid JSON strings.
  : @return  a sequence of nodes according to Simple XDM-JSON mapping described above.
  : @error ZXQP0019 if any of the strings passed as parameter is not valid JSON.
- : @example rbkt/Queries/zorba/converters/jansson/parse_json_11.xq
+ : @example test_json/Queries/converters/jansson/parse_json_11.xq
  :)
 declare function json:parse(
   $arg as xs:string?
@@ -168,7 +168,7 @@ declare function json:parse(
  : @param $arg a sequence of valid JSON strings.
  : @return  a sequence of nodes according the JSON-ML mapping described above.
  : @error ZXQP0019 if any of the strings passed as parameter is not valid JSON.
- : @example rbkt/Queries/zorba/converters/jansson/parse_json_ml_05.xq
+ : @example test_json/Queries/converters/jansson/parse_json_ml_05.xq
  :)
 declare function json:parse-ml(
   $arg as xs:string?
@@ -197,8 +197,8 @@ declare %private function json:parse-internal(
  :        "http://www.zorba-xquery.com/modules/converters/json-options" schema.
  : @return a JSON string.
  : @error ZXQP0019 if the passed elements do not have a valid JSON structure.
- : @example rbkt/Queries/zorba/converters/jansson/serialize_json_01.xq
- : @example rbkt/Queries/zorba/converters/jansson/serialize_json_ml_01.xq
+ : @example test_json/Queries/converters/jansson/serialize_json_01.xq
+ : @example test_json/Queries/converters/jansson/serialize_json_ml_01.xq
  :)
 declare function json:serialize(
   $xml as item()*, 
@@ -229,7 +229,7 @@ declare function json:serialize(
  : @param $xml a sequence of nodes.
  : @return a JSON string.
  : @error ZXQP0019 if the passed elements do not have a valid JSON structure.
- : @example rbkt/Queries/zorba/converters/jansson/serialize_json_18.xq
+ : @example test_json/Queries/converters/jansson/serialize_json_18.xq
  :)
 declare function json:serialize(
   $xml as item()* 
@@ -249,7 +249,7 @@ declare function json:serialize(
  : @param $xml a sequence of nodes.
  : @return a JSON string.
  : @error ZXQP0019 if the passed elements do not have a valid JSON structure.
- : @example rbkt/Queries/zorba/converters/jansson/serialize_json_ml_04.xq
+ : @example test_json/Queries/converters/jansson/serialize_json_ml_04.xq
  :)
 declare function json:serialize-ml(
   $xml as item()* 
