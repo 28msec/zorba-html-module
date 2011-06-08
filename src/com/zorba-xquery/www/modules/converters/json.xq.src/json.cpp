@@ -120,7 +120,7 @@ ParseFunction::evaluate(
     }
 
     XmlDataManager* lDataManager = Zorba::getInstance(0)->getXmlDataManager();
-    Item lItem = lDataManager->parseDocument(lSs);
+    Item lItem = lDataManager->parseXML(lSs);
 
     return ItemSequence_t(new SingletonItemSequence(lItem));
   }
