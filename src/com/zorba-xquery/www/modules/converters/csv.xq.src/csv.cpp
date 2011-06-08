@@ -27,7 +27,6 @@
 #include <zorba/store_consts.h>
 #include <zorba/error_list.h>
 #include <zorba/user_exception.h>
-#include <zorba/stateless_function.h>
 #include <zorba/item_factory.h>
 #include <zorba/singleton_item_sequence.h>
 #include <zorba/empty_sequence.h>
@@ -52,7 +51,7 @@ CSVModule::CSVModule()
   lSerializeFunc = NULL;
 }
 
-StatelessExternalFunction*
+ExternalFunction*
 CSVModule::getExternalFunction(const zorba::String &aLocalname)
 {
   if (1 == 0) {

@@ -38,7 +38,7 @@ ParseFunction::ParseFunction(const HtmlModule* aModule)
 
 ItemSequence_t
 ParseFunction::evaluate(
-  const StatelessExternalFunction::Arguments_t& aArgs,
+  const ExternalFunction::Arguments_t& aArgs,
   const StaticContext*                          aSctxCtx,
   const DynamicContext*                         aDynCtx) const
   {
@@ -102,10 +102,10 @@ HtmlModule::~HtmlModule()
        theFunctions.clear();
 }
 
-StatelessExternalFunction*
+ExternalFunction*
 HtmlModule::getExternalFunction(const String& aLocalname)
 {
-  StatelessExternalFunction*& lFunc = theFunctions[aLocalname];
+  ExternalFunction*& lFunc = theFunctions[aLocalname];
   if (!lFunc)
   {
     if (1 == 0)

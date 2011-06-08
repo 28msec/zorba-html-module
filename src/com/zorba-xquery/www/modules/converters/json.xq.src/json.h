@@ -20,7 +20,7 @@
 
 #include <zorba/zorba.h>
 #include <zorba/iterator.h>
-#include <zorba/external_function.h>
+#include <zorba/function.h>
 #include <zorba/external_module.h>
 
 #include "stringiterator_streambuf.h"
@@ -46,7 +46,7 @@ namespace zorba
         }
       };
 
-      typedef std::map<String, StatelessExternalFunction*, ltstr> FuncMap_t;
+      typedef std::map<String, ExternalFunction*, ltstr> FuncMap_t;
 
       FuncMap_t theFunctions;
 
@@ -56,7 +56,7 @@ namespace zorba
       virtual String
       getURI() const { return "http://www.zorba-xquery.com/modules/converters/json"; }
 
-      virtual StatelessExternalFunction*
+      virtual ExternalFunction*
       getExternalFunction(const String& aLocalname);
 
       virtual void
@@ -75,7 +75,7 @@ namespace zorba
 
 //*****************************************************************************
 //*****************************************************************************
-    class JsonFunction : public NonePureStatelessExternalFunction
+    class JsonFunction : public ContextualExternalFunction
     {
     protected:
       const JsonModule* theModule;
@@ -102,7 +102,7 @@ namespace zorba
       getLocalName() const { return "parse-internal"; }
 
       virtual ItemSequence_t
-      evaluate(const StatelessExternalFunction::Arguments_t& args,
+      evaluate(const ExternalFunction::Arguments_t& args,
                const StaticContext* aSctxCtx,
                const DynamicContext* aDynCtx) const;
     };
@@ -154,7 +154,7 @@ namespace zorba
       getLocalName() const { return "serialize-internal"; }
 
       virtual ItemSequence_t
-      evaluate(const StatelessExternalFunction::Arguments_t& args,
+      evaluate(const ExternalFunction::Arguments_t& args,
                const StaticContext* aSctxCtx,
                const DynamicContext* aDynCtx) const;
     };

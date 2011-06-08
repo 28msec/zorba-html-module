@@ -153,7 +153,7 @@ ZorbaXsltTransformIterator::nextImpl(store::Item_t& result, PlanState& planState
 
 ItemSequence_t
 TransformFunction::evaluate(
-  const StatelessExternalFunction::Arguments_t& aArgs,
+  const ExternalFunction::Arguments_t& aArgs,
   const StaticContext*                          aSctxCtx,
   const DynamicContext*                         aDynCtx) const
 {
@@ -262,10 +262,10 @@ XsltModule::~XsltModule()
        theFunctions.clear();
 }
 
-StatelessExternalFunction*
+ExternalFunction*
 XsltModule::getExternalFunction(const String& aLocalname)
 {
-  StatelessExternalFunction*& lFunc = theFunctions[aLocalname];
+  ExternalFunction*& lFunc = theFunctions[aLocalname];
   if (!lFunc)
   {
     if (1 == 0)

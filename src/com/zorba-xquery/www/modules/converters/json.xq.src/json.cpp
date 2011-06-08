@@ -74,7 +74,7 @@ ParseFunction::ParseFunction(const JsonModule* aModule)
 
 ItemSequence_t
 ParseFunction::evaluate(
-  const StatelessExternalFunction::Arguments_t& aArgs,
+  const ExternalFunction::Arguments_t& aArgs,
   const StaticContext*                          aSctxCtx,
   const DynamicContext*                         aDynCtx) const
   {
@@ -210,7 +210,7 @@ SerializeFunction::SerializeFunction(const JsonModule* aModule)
 
 ItemSequence_t
 SerializeFunction::evaluate(
-  const StatelessExternalFunction::Arguments_t& aArgs,
+  const ExternalFunction::Arguments_t& aArgs,
   const StaticContext*                          aSctxCtx,
   const DynamicContext*                         aDynCtx) const
   {
@@ -265,10 +265,10 @@ JsonModule::~JsonModule()
        theFunctions.clear();
 }
 
-StatelessExternalFunction*
+ExternalFunction*
 JsonModule::getExternalFunction(const String& aLocalname)
 {
-  StatelessExternalFunction*& lFunc = theFunctions[aLocalname];
+  ExternalFunction*& lFunc = theFunctions[aLocalname];
   if (!lFunc)
   {
     if (1 == 0)

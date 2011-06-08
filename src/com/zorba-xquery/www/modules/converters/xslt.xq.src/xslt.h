@@ -19,7 +19,7 @@
 #include <map>
 
 #include <zorba/zorba.h>
-#include <zorba/external_function.h>
+#include <zorba/function.h>
 #include <zorba/external_module.h>
 
 namespace zorba
@@ -43,7 +43,7 @@ namespace zorba
         }
       };
 
-      typedef std::map<String, StatelessExternalFunction*, ltstr> FuncMap_t;
+      typedef std::map<String, ExternalFunction*, ltstr> FuncMap_t;
 
       FuncMap_t theFunctions;
 
@@ -53,7 +53,7 @@ namespace zorba
       virtual String
       getURI() const { return "http://www.zorba-xquery.com/modules/converters/xslt"; }
 
-      virtual StatelessExternalFunction*
+      virtual ExternalFunction*
       getExternalFunction(const String& aLocalname);
 
       virtual void
@@ -72,7 +72,7 @@ namespace zorba
 
 //*****************************************************************************
 //*****************************************************************************
-    class XsltFunction : public NonePureStatelessExternalFunction
+    class XsltFunction : public ContextualExternalFunction
     {
     protected:
       const XsltModule* theModule;
@@ -99,7 +99,7 @@ namespace zorba
       getLocalName() const { return "transform"; }
 
       virtual ItemSequence_t
-      evaluate(const StatelessExternalFunction::Arguments_t& args,
+      evaluate(const ExternalFunction::Arguments_t& args,
                const StaticContext* aSctxCtx,
                const DynamicContext* aDynCtx) const;
     };

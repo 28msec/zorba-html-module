@@ -31,7 +31,6 @@
 #include <zorba/error.h>
 #include <zorba/error_list.h>
 #include <zorba/user_exception.h>
-#include <zorba/external_function_data.h>
 #include <zorba/zorba.h>
 
 namespace zorba

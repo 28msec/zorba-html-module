@@ -19,7 +19,7 @@
 #include <zorba/zorba.h>
 #include <zorba/iterator.h>
 #include <zorba/external_module.h>
-#include <zorba/external_function.h>
+#include <zorba/function.h>
 #include <zorba/smart_ptr.h>
 
 #include "stream_wrapper.h"
@@ -34,8 +34,8 @@ class CSVModule : public ExternalModule
 {
 private:
   static ItemFactory* theFactory;
-  StatelessExternalFunction* lParseFunc;
-  StatelessExternalFunction* lSerializeFunc;
+  ExternalFunction* lParseFunc;
+  ExternalFunction* lSerializeFunc;
 protected:
   class ltstr
   {
@@ -55,7 +55,7 @@ public:
   virtual zorba::String getURI() const
   { return theModule; }
 
-  virtual zorba::StatelessExternalFunction*
+  virtual zorba::ExternalFunction*
   getExternalFunction(const zorba::String &aLocalname);
 
   virtual void destroy();
@@ -104,7 +104,7 @@ public:
 };
 
 
-class CSVParseFunction : public NonePureStatelessExternalFunction
+class CSVParseFunction : public ContextualExternalFunction
 {
   class CSVItemSequence : public ItemSequence, public Iterator
   {
@@ -186,7 +186,7 @@ protected:
 };
 
 
-class CSVSerializeFunction : public NonePureStatelessExternalFunction
+class CSVSerializeFunction : public ContextualExternalFunction
 {
   class StringStreamSequence : public ItemSequence, public Iterator, public StringIteratorStreamBuf
   {
