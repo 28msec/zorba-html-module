@@ -235,7 +235,7 @@ TransformFunction::evaluate(
   XmlDataManager* lDM = Zorba::getInstance(0)->getXmlDataManager();
   try
   {
-    return ItemSequence_t(new SingletonItemSequence(lDM->parseDocument(iss)));   
+    return ItemSequence_t(new SingletonItemSequence(lDM->parseXML(iss)));   
   } 
   catch (ZorbaException&)
   {
