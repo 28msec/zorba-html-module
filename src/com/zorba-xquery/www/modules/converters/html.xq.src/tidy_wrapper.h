@@ -181,7 +181,7 @@ namespace zorba
       XmlDataManager* lDM = Zorba::getInstance(0)->getXmlDataManager();
       try
       {
-        return lDM->parseDocument(lStream);
+        return lDM->parseXML(lStream);
       } catch (ZorbaException&)
       {
         return NULL;//Zorba::getInstance(0)->getItemFactory()->createString(lResult);
