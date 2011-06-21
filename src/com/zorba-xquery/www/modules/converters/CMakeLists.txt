@@ -12,29 +12,23 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
-# libTidy is required
+#
+# LibTidy
+#
 IF(ZORBA_SUPPRESS_LIBTIDY)
-  MESSAGE(STATUS "ZORBA_SUPPRESS_LIBTIDY is true - not searching for libTidy.")
+  MESSAGE(STATUS "ZORBA_SUPPRESS_LIBTIDY is true - not searching for LibTidy.")
 ELSE(ZORBA_SUPPRESS_LIBTIDY)
-  IF(WIN32)
-    INCLUDE (${PROJECT_SOURCE_DIR}/cmake_modules/Windows/FindLibTidy.cmake)
-  ELSE(WIN32)
-    INCLUDE (${PROJECT_SOURCE_DIR}/cmake_modules/FindLibTidy.cmake)
-  ENDIF(WIN32)
+
+  MESSAGE(STATUS "Looking for LibTidy")
+  FIND_PACKAGE(LibTidy)
   
   IF(LIBTIDY_FOUND)
+    MESSAGE(STATUS "Found LibTidy library -- " ${LIBTIDY_LIBRARIES})
     SET(HTML_LINK_LIBRARIES ${LIBTIDY_LIBRARIES})
 
-    SET(BUILD_MODULE 1)
-
     INCLUDE_DIRECTORIES(${LIBTIDY_INCLUDE_DIR})
-
     INCLUDE_DIRECTORIES("html.xq.src")
-
-    IF (BUILD_MODULE)
-      GENERATE_MODULE_LIBRARY(html "${LIBTIDY_LIBRARIES}")
-    ENDIF (BUILD_MODULE)
-
+    GENERATE_MODULE_LIBRARY(html "${LIBTIDY_LIBRARIES}")
     ADD_TEST_DIRECTORY("${PROJECT_SOURCE_DIR}/test_html")
 
   ELSE(LIBTIDY_FOUND)
@@ -43,59 +37,46 @@ ELSE(ZORBA_SUPPRESS_LIBTIDY)
 ENDIF(ZORBA_SUPPRESS_LIBTIDY)
 
 
-# libxml and libxslt
+#
+# LibXslt (requires LibXml2)
+#
 IF(ZORBA_SUPPRESS_LIBXSLT)
-  MESSAGE(STATUS "ZORBA_SUPPRESS_LIBXSLT is true - not searching for libxslt.")
+  MESSAGE(STATUS "ZORBA_SUPPRESS_LIBXSLT is true - not searching for LibXslt.")
 ELSE(ZORBA_SUPPRESS_LIBXSLT)
 
   #
-  #  LibXml2 required by libxslt
+  # LibXml2
   #
   IF(NOT LIBXML2_FOUND)
-  
     MESSAGE(STATUS "Looking for LibXml2")
-    
-    IF(WIN32)
-      INCLUDE (${CMAKE_SOURCE_DIR}/cmake_modules/Windows/FindLibXml2.cmake)
-    ELSE(WIN32)
-      FIND_PACKAGE(LibXml2)
-    ENDIF(WIN32)
-    
+    FIND_PACKAGE(LibXml2)
   ENDIF(NOT LIBXML2_FOUND)
          
   IF(LIBXML2_FOUND)
-    MESSAGE(STATUS "Found LIBXML2 library -- " ${LIBXML2_LIBRARIES})
+    MESSAGE(STATUS "Found LibXml2 library -- " ${LIBXML2_LIBRARIES})
       
     INCLUDE_DIRECTORIES(${LIBXML2_INCLUDE_DIR})
     SET(requiredlibs-store ${requiredlibs-store} ${LIBXML2_LIBRARIES})
     SET(CXXFLAGS ${CXXFLAGS} ${LIBXML2_DEFINITONS})
+
   ELSE(LIBXML2_FOUND)
     MESSAGE(FATAL_ERROR "The libxml2 library and headers are required in order to build xslt module.")
   ENDIF(LIBXML2_FOUND)
 
-#
-#  LibXslt
-#
+  #
+  # LibXslt
+  #
   MESSAGE(STATUS "Looking for LibXslt")
-  IF(WIN32)
-    INCLUDE (${PROJECT_SOURCE_DIR}/cmake_modules/Windows/FindLibXslt.cmake)
-  ELSE(WIN32)
-    FIND_PACKAGE(LibXslt)
-  ENDIF(WIN32)
+  FIND_PACKAGE(LibXslt)
 
   IF(LIBXSLT_FOUND)
-    MESSAGE(STATUS "Found LIBXSLT library -- " ${LIBXSLT_LIBRARIES})
+    MESSAGE(STATUS "Found LibXslt library -- " ${LIBXSLT_LIBRARIES})
 
     INCLUDE_DIRECTORIES(${LIBXSLT_INCLUDE_DIR})
     SET(requiredlibs ${requiredlibs} ${LIBXSLT_LIBRARIES})
     SET(CXXFLAGS ${CXXFLAGS} ${LIBXSLT_DEFINITONS})
-
     INCLUDE_DIRECTORIES("xslt.xq.src")
-
-    IF (BUILD_MODULE)
-      GENERATE_MODULE_LIBRARY(xslt "${LIBXSLT_LIBRARIES}")
-    ENDIF (BUILD_MODULE)
-
+    GENERATE_MODULE_LIBRARY(xslt "${LIBXSLT_LIBRARIES}")
     ADD_TEST_DIRECTORY("${PROJECT_SOURCE_DIR}/test_xslt")
 
   ELSE(LIBXSLT_FOUND)
@@ -104,39 +85,39 @@ ELSE(ZORBA_SUPPRESS_LIBXSLT)
 ENDIF(ZORBA_SUPPRESS_LIBXSLT)
 
 
-GENERATE_MODULE_LIBRARY(csv "")
-
-#add unit test for streambuf implementation in csv, related to streamable strings
-CREATE_TEST_SOURCELIST(StreambufUnitTests StreambufUnitTests.cpp
-						streambuftest.cpp
-						)
-ADD_EXECUTABLE("StreambufUnitTests" ${StreambufUnitTests} csv.xq.src/stringiterator_streambuf.cpp)
-ADD_TEST("streamable_string_streambuf" StreambufUnitTests "streambuftest")
-
-
-# Jansson is required
+#
+# Jansson
+#
 IF(ZORBA_SUPPRESS_JANSSON)
   MESSAGE(STATUS "ZORBA_SUPPRESS_JANSSON is true - not searching for Jansson.")
 ELSE(ZORBA_SUPPRESS_JANSSON)
 
-    INCLUDE (${PROJECT_SOURCE_DIR}/cmake_modules/FindJansson.cmake)  
+  MESSAGE(STATUS "Looking for Jansson")
+  FIND_PACKAGE(Jansson)
      
   IF(Jansson_FOUND)
+    MESSAGE(STATUS "Found Jansson library -- " ${LIBXSLT_LIBRARIES})
+
     SET(JSON_LINK_LIBRARIES ${Jansson_LIBRARIES})
-
-    SET(BUILD_MODULE 1)
-
     INCLUDE_DIRECTORIES(${Jansson_INCLUDE_DIRS})
-
     INCLUDE_DIRECTORIES("json.xq.src")
-
-    IF (BUILD_MODULE)
-      GENERATE_MODULE_LIBRARY(json "${Jansson_LIBRARIES}")
-    ENDIF (BUILD_MODULE)
-
+    GENERATE_MODULE_LIBRARY(json "${Jansson_LIBRARIES}")
     ADD_TEST_DIRECTORY("${PROJECT_SOURCE_DIR}/test_json")
 
   ELSE(Jansson_FOUND)
     MESSAGE(STATUS "Jansson library not found -- if you want to use Json functionality please set Jansson_INCLUDE_DIRS and Jansson_LIBRARIES cmake parameters.")
   ENDIF(Jansson_FOUND)
 ENDIF(ZORBA_SUPPRESS_JANSSON)
+
+
+# csv
+GENERATE_MODULE_LIBRARY(csv "")
+
+# add unit test for streambuf implementation in csv, related to streamable strings
+CREATE_TEST_SOURCELIST(
+  StreambufUnitTests
+  StreambufUnitTests.cpp
+  streambuftest.cpp
+)
+ADD_EXECUTABLE("StreambufUnitTests" ${StreambufUnitTests} csv.xq.src/stringiterator_streambuf.cpp)
+ADD_TEST("streamable_string_streambuf" StreambufUnitTests "streambuftest")
