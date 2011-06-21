@@ -18,7 +18,7 @@ PROJECT (zorba_data-converters_module)
 ENABLE_TESTING ()
 INCLUDE (CTest)
 
-IF(WIN32)
+IF (WIN32)
   # On Windows we use proxy modules that try to guess first the location
   # of the required third party libraries. This will search in order in:
   # 1. the path pointed by ZORBA_THIRD_PARTY_REQUIREMENTS
@@ -26,11 +26,11 @@ IF(WIN32)
   # 3. the PATH environment variable
   # The logic is implemented by the macros in the ProxyFindModule.cmake module.
   LIST (APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules/Windows")
-ENDIF(WIN32)
+ENDIF (WIN32)
 LIST (APPEND CMAKE_MODULE_PATH "${PROJECT_SOURCE_DIR}/cmake_modules")
 
 FIND_PACKAGE (Zorba REQUIRED HINTS "${ZORBA_BUILD_DIR}")
 INCLUDE ("${Zorba_USE_FILE}")
 
-ADD_TEST_DIRECTORY("${PROJECT_SOURCE_DIR}/test")
-ADD_SUBDIRECTORY("src")
+ADD_TEST_DIRECTORY ("${PROJECT_SOURCE_DIR}/test")
+ADD_SUBDIRECTORY ("src")
