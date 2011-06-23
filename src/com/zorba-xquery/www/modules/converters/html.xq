@@ -24,7 +24,7 @@
  :
  : @author Sorin Nasoi
  : @library <a href="http://tidy.sourceforge.net/">Tidy C++ Library</a>
- : @project data-processing/data-convertors
+ : @project data processing/data convertors
  :
  :)
 module namespace html = "http://www.zorba-xquery.com/modules/converters/html";

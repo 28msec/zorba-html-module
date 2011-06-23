@@ -18,7 +18,7 @@
  : This module provides XSLT transformation functionality. 
  :
  : @author Cezar Andrei
- : @project data-processing/data-convertors
+ : @project data processing/data convertors
  :
  :)
 module namespace xslt = "http://www.zorba-xquery.com/modules/converters/xslt";
