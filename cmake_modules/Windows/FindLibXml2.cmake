@@ -27,4 +27,11 @@
 #
 # See the FindLibXml2.cmake module shipped with CMake for more information.
 
-FIND_PACKAGE_WIN32(LibXml2 libxml)
+FIND_PACKAGE_WIN32(LibXml2 LIBXML2_FOUND libxml)
+
+IF (LIBXML2_FOUND)
+
+  # find the needed DLL's
+  FIND_PACKAGE_DLLS_WIN32 (${FOUND_LOCATION} libxml2.dll)
+
+ENDIF (LIBXML2_FOUND)

@@ -27,4 +27,11 @@
 #
 # See the FindLibTidy.cmake module shipped with Zorba for more information.
 
-FIND_PACKAGE_WIN32(Jansson jansson)
+FIND_PACKAGE_WIN32(Jansson Jansson_FOUND jansson)
+
+IF (Jansson_FOUND)
+
+  # find the needed DLL's
+  FIND_PACKAGE_DLLS_WIN32 (${FOUND_LOCATION} jansson.dll)
+
+ENDIF (Jansson_FOUND)

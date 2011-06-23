@@ -27,4 +27,11 @@
 #
 # See the FindLibTidy.cmake module shipped with Zorba for more information.
 
-FIND_PACKAGE_WIN32(LibTidy tidy)
+FIND_PACKAGE_WIN32(LibTidy LIBTIDY_FOUND tidy)
+
+IF (LIBTIDY_FOUND)
+
+  # find the needed DLL's
+  FIND_PACKAGE_DLLS_WIN32 (${FOUND_LOCATION} tidy.dll)
+
+ENDIF (LIBTIDY_FOUND)

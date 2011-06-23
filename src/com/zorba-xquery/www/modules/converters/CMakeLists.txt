@@ -35,7 +35,7 @@ ELSE (ZORBA_SUPPRESS_LIBTIDY)
     MESSAGE (STATUS "LibTidy library not found -- if you want to use HTML Tidy functionality please set LIBTIDY_INCLUDE_DIR and LIBTIDY_LIBRARIES cmake parameters.")
   ENDIF (LIBTIDY_FOUND)
 ENDIF (ZORBA_SUPPRESS_LIBTIDY)
-
+MESSAGE (STATUS "")
 
 #
 # LibXslt (requires LibXml2)
@@ -62,6 +62,7 @@ ELSE (ZORBA_SUPPRESS_LIBXSLT)
   ELSE (LIBXML2_FOUND)
     MESSAGE (FATAL_ERROR "The libxml2 library and headers are required in order to build xslt module.")
   ENDIF (LIBXML2_FOUND)
+  MESSAGE (STATUS "")
 
   #
   # LibXslt
@@ -83,6 +84,7 @@ ELSE (ZORBA_SUPPRESS_LIBXSLT)
     MESSAGE (STATUS "LibXslt library not found -- if you want to use XSLT functionality please set LIBXSLT_INCLUDE_DIR and LIBXSLT_LIBRARIES cmake parameters.")
   ENDIF (LIBXSLT_FOUND)
 ENDIF (ZORBA_SUPPRESS_LIBXSLT)
+MESSAGE (STATUS "")
 
 
 #
@@ -108,6 +110,7 @@ ELSE (ZORBA_SUPPRESS_JANSSON)
     MESSAGE (STATUS "Jansson library not found -- if you want to use Json functionality please set Jansson_INCLUDE_DIRS and Jansson_LIBRARIES cmake parameters.")
   ENDIF (Jansson_FOUND)
 ENDIF (ZORBA_SUPPRESS_JANSSON)
+MESSAGE (STATUS "")
 
 
 # csv

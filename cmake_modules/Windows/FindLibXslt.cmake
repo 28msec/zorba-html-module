@@ -27,4 +27,11 @@
 #
 # See the FindLibXslt.cmake module shipped with Zorba for more information.
 
-FIND_PACKAGE_WIN32(LibXslt xslt)
+FIND_PACKAGE_WIN32(LibXslt LIBXSLT_FOUND xslt)
+
+IF (LIBXSLT_FOUND)
+
+  # find the needed DLL's
+  FIND_PACKAGE_DLLS_WIN32 (${FOUND_LOCATION} libxslt.dll)
+
+ENDIF (LIBXSLT_FOUND)
