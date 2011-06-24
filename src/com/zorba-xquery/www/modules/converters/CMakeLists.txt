@@ -98,7 +98,7 @@ ELSE (ZORBA_SUPPRESS_JANSSON)
   FIND_PACKAGE (Jansson)
      
   IF (Jansson_FOUND)
-    MESSAGE (STATUS "Found Jansson library -- " ${LIBXSLT_LIBRARIES})
+    MESSAGE (STATUS "Found Jansson library -- " ${Jansson_LIBRARIES})
 
     SET (JSON_LINK_LIBRARIES ${Jansson_LIBRARIES})
     INCLUDE_DIRECTORIES (${Jansson_INCLUDE_DIRS})
@@ -117,7 +117,7 @@ MESSAGE (STATUS "")
 GENERATE_MODULE_LIBRARY (csv "")
 
 # add unit test for streambuf implementation in csv, related to streamable strings
-CREATE_TEST_SOURCELIST(
+CREATE_TEST_SOURCELIST (
   StreambufUnitTests
   StreambufUnitTests.cpp
   streambuftest.cpp
