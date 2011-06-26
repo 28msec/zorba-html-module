@@ -18,13 +18,15 @@
  : This module provides XSLT transformation functionality. 
  :
  : @author Cezar Andrei
- : @project data processing/data convertors
+ : @library <a href="http://xmlsoft.org/XSLT/">libxslt Library</a>
+ : @project data-processing/data-convertors
  :
  :)
 module namespace xslt = "http://www.zorba-xquery.com/modules/converters/xslt";
 
 
-(:<p>Tranforms the $source by applying the XSLT $tylesheet</p>
+(:~
+ :<p>Tranforms the $source by applying the XSLT $tylesheet</p>
  :
  : @param $source the input document
  : @param $stylesheet the XSLT stylesheet
