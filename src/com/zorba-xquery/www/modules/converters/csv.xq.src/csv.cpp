@@ -308,7 +308,6 @@ void CSVOptions::parse(zorba::Item options_node, ItemFactory *item_factory)
         {
           String column_text = column_item.getStringValue();
           const char *column_str = column_text.c_str();
-          std::cout << "column_str: '" << column_str << "'\n"; std::cout.flush();
           while(*column_str && isascii(*column_str) && isspace(*column_str))
             column_str++;
           unsigned int position = abs(atoi(column_str));
