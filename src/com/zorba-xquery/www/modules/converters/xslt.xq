@@ -19,7 +19,7 @@
  :
  : @author Cezar Andrei
  : @library <a href="http://xmlsoft.org/XSLT/">libxslt Library</a>
- : @project data-processing/data-convertors
+ : @project data processing/data convertors
  :
  :)
 module namespace xslt = "http://www.zorba-xquery.com/modules/converters/xslt";
