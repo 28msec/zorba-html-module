@@ -28,7 +28,7 @@ ELSE (ZORBA_SUPPRESS_LIBTIDY)
 
     INCLUDE_DIRECTORIES (${LIBTIDY_INCLUDE_DIR})
     INCLUDE_DIRECTORIES ("html.xq.src")
-    GENERATE_MODULE_LIBRARY (html "${LIBTIDY_LIBRARIES}")
+    DECLARE_ZORBA_MODULE("http://www.zorba-xquery.com/modules/converters/html" 1.0 "html.xq"  "${LIBTIDY_LIBRARIES}")
     ADD_TEST_DIRECTORY ("${PROJECT_SOURCE_DIR}/test_html")
 
   ELSE (LIBTIDY_FOUND)
@@ -77,7 +77,7 @@ ELSE (ZORBA_SUPPRESS_LIBXSLT)
     SET (requiredlibs ${requiredlibs} ${LIBXSLT_LIBRARIES})
     SET (CXXFLAGS ${CXXFLAGS} ${LIBXSLT_DEFINITONS})
     INCLUDE_DIRECTORIES ("xslt.xq.src")
-    GENERATE_MODULE_LIBRARY (xslt "${LIBXSLT_LIBRARIES}")
+    DECLARE_ZORBA_MODULE ("http://www.zorba-xquery.com/modules/converters/xslt" 1.0 "xslt.xq" "${LIBXSLT_LIBRARIES}")
     ADD_TEST_DIRECTORY ("${PROJECT_SOURCE_DIR}/test_xslt")
 
   ELSE (LIBXSLT_FOUND)
@@ -103,7 +103,7 @@ ELSE (ZORBA_SUPPRESS_JANSSON)
     SET (JSON_LINK_LIBRARIES ${Jansson_LIBRARIES})
     INCLUDE_DIRECTORIES (${Jansson_INCLUDE_DIRS})
     INCLUDE_DIRECTORIES ("json.xq.src")
-    GENERATE_MODULE_LIBRARY (json "${Jansson_LIBRARIES}")
+    DECLARE_ZORBA_MODULE ("http://www.zorba-xquery.com/modules/converters/json" 1.0 "json.xq" "${Jansson_LIBRARIES}")
     ADD_TEST_DIRECTORY ("${PROJECT_SOURCE_DIR}/test_json")
 
   ELSE (Jansson_FOUND)
@@ -114,7 +114,7 @@ MESSAGE (STATUS "")
 
 
 # csv
-GENERATE_MODULE_LIBRARY (csv "")
+DECLARE_ZORBA_MODULE ("http://www.zorba-xquery.com/modules/converters/csv" 1.0 "csv.xq")
 
 # add unit test for streambuf implementation in csv, related to streamable strings
 CREATE_TEST_SOURCELIST (

@@ -97,6 +97,9 @@ import module namespace zorba-schema = "http://www.zorba-xquery.com/modules/sche
  :)
 import schema namespace json-options = "http://www.zorba-xquery.com/modules/converters/json-options";
 
+declare namespace ver = "http://www.zorba-xquery.com/options/versioning";
+declare option ver:module-version "1.0";
+
 (:~
  : Errors namespace URI.
 :)

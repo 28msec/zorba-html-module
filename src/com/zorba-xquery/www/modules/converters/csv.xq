@@ -33,6 +33,9 @@ import module namespace zorba-schema = "http://www.zorba-xquery.com/modules/sche
   :)
 import schema namespace csv-options = "http://www.zorba-xquery.com/modules/converters/csv-options";
 
+declare namespace ver = "http://www.zorba-xquery.com/options/versioning";
+declare option ver:module-version "1.0";
+
 (:~
  : Errors namespace URI.
 :)

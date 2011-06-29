@@ -24,6 +24,9 @@
  :)
 module namespace xslt = "http://www.zorba-xquery.com/modules/converters/xslt";
 
+declare namespace ver = "http://www.zorba-xquery.com/options/versioning";
+declare option ver:module-version "1.0";
+
 
 (:~
  :<p>Tranforms the $source by applying the XSLT $tylesheet</p>
