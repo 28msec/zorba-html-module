@@ -37,55 +37,6 @@ ELSE (ZORBA_SUPPRESS_LIBTIDY)
 ENDIF (ZORBA_SUPPRESS_LIBTIDY)
 MESSAGE (STATUS "")
 
-#
-# LibXslt (requires LibXml2)
-#
-IF (ZORBA_SUPPRESS_LIBXSLT)
-  MESSAGE (STATUS "ZORBA_SUPPRESS_LIBXSLT is true - not searching for LibXslt.")
-ELSE (ZORBA_SUPPRESS_LIBXSLT)
-
-  #
-  # LibXml2
-  #
-  IF (NOT LIBXML2_FOUND)
-    MESSAGE (STATUS "Looking for LibXml2")
-    FIND_PACKAGE (LibXml2)
-  ENDIF (NOT LIBXML2_FOUND)
-         
-  IF (LIBXML2_FOUND)
-    MESSAGE (STATUS "Found LibXml2 library -- " ${LIBXML2_LIBRARIES})
-      
-    INCLUDE_DIRECTORIES (${LIBXML2_INCLUDE_DIR})
-    SET (requiredlibs-store ${requiredlibs-store} ${LIBXML2_LIBRARIES})
-    SET (CXXFLAGS ${CXXFLAGS} ${LIBXML2_DEFINITONS})
-
-  ELSE (LIBXML2_FOUND)
-    MESSAGE (FATAL_ERROR "The libxml2 library and headers are required in order to build xslt module.")
-  ENDIF (LIBXML2_FOUND)
-  MESSAGE (STATUS "")
-
-  #
-  # LibXslt
-  #
-  MESSAGE (STATUS "Looking for LibXslt")
-  FIND_PACKAGE (LibXslt)
-
-  IF (LIBXSLT_FOUND)
-    MESSAGE (STATUS "Found LibXslt library -- " ${LIBXSLT_LIBRARIES})
-
-    INCLUDE_DIRECTORIES (${LIBXSLT_INCLUDE_DIR})
-    SET (requiredlibs ${requiredlibs} ${LIBXSLT_LIBRARIES})
-    SET (CXXFLAGS ${CXXFLAGS} ${LIBXSLT_DEFINITONS})
-    INCLUDE_DIRECTORIES ("xslt.xq.src")
-    DECLARE_ZORBA_MODULE ("http://www.zorba-xquery.com/modules/converters/xslt" 1.0 "xslt.xq" "${LIBXSLT_LIBRARIES}")
-    ADD_TEST_DIRECTORY ("${PROJECT_SOURCE_DIR}/test_xslt")
-
-  ELSE (LIBXSLT_FOUND)
-    MESSAGE (STATUS "LibXslt library not found -- if you want to use XSLT functionality please set LIBXSLT_INCLUDE_DIR and LIBXSLT_LIBRARIES cmake parameters.")
-  ENDIF (LIBXSLT_FOUND)
-ENDIF (ZORBA_SUPPRESS_LIBXSLT)
-MESSAGE (STATUS "")
-
 
 #
 # Jansson
