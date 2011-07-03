@@ -5,11 +5,13 @@ import module namespace file = "http://expath.org/ns/file";
 
 import schema namespace output = "http://www.w3.org/2010/xslt-xquery-serialization";
 
+declare namespace ann = "http://www.zorba-xquery.com/annotations";
+
 declare variable $inFile as xs:string := fn:concat(file:dir-name(fn:static-base-uri()), "/../image/images/bird.gif");
 declare variable $testDir as xs:string := fn:concat(file:dir-name(fn:static-base-uri()),"/tmpBinaryReadWrite");
 declare variable $outFile as xs:string := fn:concat($testDir, file:directory-separator(), "bird.gif");
 
-declare %nondeterministic %sequential function local:thisTest() as xs:string* {
+declare %ann:nondeterministic %ann:sequential function local:thisTest() as xs:string* {
   (: ==================================================================== :)
   (: read the image file (binary) :)
   (: ========= :)
@@ -29,7 +31,7 @@ declare %nondeterministic %sequential function local:thisTest() as xs:string* {
 };
 
 
-declare %nondeterministic %sequential function local:main() as xs:string* 
+declare %ann:nondeterministic %ann:sequential function local:main() as xs:string* 
 {
 
 (: ========================= :)
