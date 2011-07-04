@@ -82,7 +82,7 @@
   : @see <a href="http://snelson.org.uk/archives/2008/02/parsing_json_in.php#more">Mapping proposed by John Snelson</a>
   : @see <a href="http://jsonml.org" target="_blank">JSonML</a>
   : @see <a href="http://www.digip.org/jansson/doc/2.0/">Jansson library for encoding, decoding and manipulating JSON data</a>
-  : @project data processing/data convertors
+  : @project data processing/data converters
   :
   :)
 module namespace json = "http://www.zorba-xquery.com/modules/converters/json";

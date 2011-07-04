@@ -24,7 +24,7 @@
  :
  : @author Sorin Nasoi
  : @library <a href="http://tidy.sourceforge.net/">Tidy C++ Library</a>
- : @project data processing/data convertors
+ : @project data processing/data converters
  :
  :)
 module namespace html = "http://www.zorba-xquery.com/modules/converters/html";
@@ -98,7 +98,7 @@ declare function html:parse (
  :        to configure the tidy process that have to be validated against the 
  :        "http://www.zorba-xquery.com/modules/converters/html-options" schema.
  : @return the tidied XHTML document node
- : @error $html:errWrongParam if the otions were not set correctly.
+ : @error $html:errWrongParam if the options were not set correctly.
  : @example test_html/Queries/converters/html/tidy_1.xq
  :)
 declare function html:parse (

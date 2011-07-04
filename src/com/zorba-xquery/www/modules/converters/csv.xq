@@ -15,11 +15,11 @@
 :)
 
 (:~
- : Function library providing convertors from CSV/TXT to XML and back.
+ : Function library providing converters from CSV/TXT to XML and back.
  : The functions are optimized to work with large amounts of data, in a streaming way.
  :
  : @author Daniel Turcanu
- : @project data processing/data convertors
+ : @project data processing/data converters
  :)
 module namespace zorba-csv = "http://www.zorba-xquery.com/modules/converters/csv";
 
@@ -81,7 +81,7 @@ declare variable $zorba-csv:errWrongParam as xs:QName := fn:QName($zorba-csv:csv
  :    All the parameters are optional and can appear in any order.<br/>
  :    All the parameters are case sensitive. The namespace used is "http://www.zorba-xquery.com/modules/converters/csv-options".<br/>
  :    All strings must have UTF-8 encoding.<br/>
- :    Parameters csv, column-widths, column-positions are mutualy exclusive. If none is specified, 
+ :    Parameters csv, column-widths, column-positions are mutually exclusive. If none is specified, 
  :    the input string is assumed to be csv.<br/>
  :    Description of parameters:
  :    <dl>
@@ -155,7 +155,7 @@ declare variable $zorba-csv:errWrongParam as xs:QName := fn:QName($zorba-csv:csv
  :        &lt;/row></i><br/>
  :     </dd>
  :     <dt><b>start-from-row</b></dt>
- :     <dd>If the data does not start from line 1 or imediately after the header, 
+ :     <dd>If the data does not start from line 1 or immediately after the header, 
  :        you can specify the starting line in the <b>line</b> attribute.<br/>
  :        Also you can use this attribute in the form "<i>first_line - last_line</i>" to specify also the last line
  :        if you don't want the whole csv to be parsed.
@@ -254,7 +254,7 @@ declare %private function zorba-csv:parse-internal($csv as xs:string,
  : All the parameters are optional and can appear in any order.<br/>
  : All the parameters are case sensitive. The namespace used is "http://www.zorba-xquery.com/modules/converters/csv-options".<br/>
  : All strings must have UTF-8 encoding.<br/>
- : Parameters csv, column-widths, column-positions are mutualy exclusive.
+ : Parameters csv, column-widths, column-positions are mutually exclusive.
  : If none is specified, the xml is converted to csv.
  :
  : Description of parameters:
