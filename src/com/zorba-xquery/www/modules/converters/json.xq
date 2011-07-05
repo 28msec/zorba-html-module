@@ -15,17 +15,6 @@
   :)
 
  (:~
-  : <p>In the XQuery specification, XQuery is described as a language
-  : capable of expressing queries on XML data.
-  : This makes XQuery the perfect choice for data processing on the
-  : Web because XML is widely used there. However, there are also some
-  : other data formats present on the Web.
-  : For example, <a href="http://www.json.org/" target="_blank">JSON
-  : (JavaScript Object Notation)</a> is the most common data format for
-  : applications which are written in JavaScript.
-  : JSON is a lightweight hierarchical data-interchange format. Like XML,
-  : it is easy for humans to read and write. Moreover, it is easy for
-  : machines to parse and generate.</p>
   :
   : <p>In order to enable JSON processing with XQuery, Zorba implements a set
   : of functions that open XQuery developers the door to process JSON
@@ -66,7 +55,7 @@
   : for manipulating JSON data that implements the <a href="http://tools.ietf.org/html/rfc4627.html"><strong>RFC 4627</strong></a>. <br />
   : <a xmlns:xqdoc="http://www.xqdoc.org/1.0" href="http://www.digip.org/jansson/">Jansson library</a> guarantees that the items are <strong>UNIQUE</strong>, it <strong>DOES NOT</strong> guarantee that they 
   : are returned in the same exact order.<br />However, this is an approved behaviour because returning the items in the same exact order if not specified in the to the 
-  : <a href="http://tools.ietf.org/html/rfc4627#section-4"><strong>RFC 4627 section 4</strong></a>.</p>
+  : <a href="http://tools.ietf.org/html/rfc4627#section-4"><strong>RFC 4627 section 4.</strong></a></p>
   : <p>Also, please make sure that the JSON strings you want to pass to Zorba are valid. <br />
   : According to the <a href="http://tools.ietf.org/html/rfc4627.html"><strong>RFC 4627</strong></a> a valid JSON string begins with either an 
   : <a href="http://www.json.org/array.gif">array</a> or an <a href="http://www.json.org/object.gif">object</a>.<br />
@@ -148,7 +137,14 @@ declare function json:parse(
 
 (:~
  : This function parses a JSON string and returns an XDM instance according
- : to either one of the mappings described above.
+ : to simple XDM-JSON mapping described above.
+ :
+ : This function is the equivalent of calling
+ :<pre class="brush: xquery;"> 
+ :  json:parse($arg,
+ :  <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
+ :    <jsonParam name="mapping" value="simple-json" />
+ :  </options>)</pre>
  :
  : @param $arg a sequence of valid JSON strings.
  : @return  a sequence of nodes according to Simple XDM-JSON mapping described above.
@@ -167,7 +163,15 @@ declare function json:parse(
 
 (:~
  : This function parses a JSON string and returns an XDM instance according
- : to either one of the mappings described above.
+ : to JsonML mapping described above.
+ :
+ : This function is the equivalent of calling
+ : <pre class="brush: xquery;">
+ :  json:parse($arg,
+ :  <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
+ :    <jsonParam name="mapping" value="json-ml" />
+ :  </options>)
+ : </pre>
  :
  : @param $arg a sequence of valid JSON strings.
  : @return  a sequence of nodes according the JSON-ML mapping described above.
@@ -230,6 +234,13 @@ declare function json:serialize(
  : transforms each element into a valid JSON string according to the
  : Simple XDM-JSON mapping described above
  :
+ : This function is the equivalent of calling 
+ :<pre class="brush: xquery;">
+ :  json:serialize($xml,
+ :  <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
+ :    <jsonParam name="mapping" value="simple-json" />
+ :  </options>)</pre>
+ :
  : @param $xml a sequence of nodes.
  : @return a JSON string.
  : @error ZXQP0019 if the passed elements do not have a valid JSON structure.
@@ -248,7 +259,13 @@ declare function json:serialize(
 (:~
  : The serialize function takes a sequence of nodes as parameter and
  : transforms each element into a valid JSON string according to the
- : Simple XDM-JSON mapping described above
+ : JsonML mapping described above.
+ :
+ : This function is the equivalent of calling 
+ :<pre class="brush: xquery;">
+ :  json:serialize($xml,<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
+ :    <jsonParam name="mapping" value="json-ml" />
+ :  </options>)</pre>
  :
  : @param $xml a sequence of nodes.
  : @return a JSON string.
