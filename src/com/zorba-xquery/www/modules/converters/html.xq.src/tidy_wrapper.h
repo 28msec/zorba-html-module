@@ -29,7 +29,7 @@
 #include <zorba/store_consts.h>
 #include <zorba/xmldatamanager.h>
 #include <zorba/error.h>
-#include <zorba/error_list.h>
+#include <zorba/diagnostic_list.h>
 #include <zorba/user_exception.h>
 #include <zorba/zorba.h>
 

@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-#include <zorba/error_list.h>
+#include <zorba/diagnostic_list.h>
 
 #include "stringiterator_streambuf.h"
 
