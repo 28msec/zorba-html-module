@@ -21,7 +21,7 @@
  : @author Daniel Turcanu
  : @project data processing/data converters
  :)
-module namespace zorba-csv = "http://www.zorba-xquery.com/modules/converters/csv";
+module namespace csv = "http://www.zorba-xquery.com/modules/converters/csv";
 
 (:~
  : Import module for checking if csv options element is validated.
@@ -39,20 +39,20 @@ declare option ver:module-version "1.0";
 (:~
  : Errors namespace URI.
 :)
-declare variable $zorba-csv:csvNS as xs:string := "http://www.zorba-xquery.com/modules/converters/csv";
+declare variable $csv:csvNS as xs:string := "http://www.zorba-xquery.com/modules/converters/csv";
 
 (:~
  : Error code for wrong parameter situations.<br/>
  : Possible error messages:<br/>
  : * "Options field must be of element options instead of ..."<br/>
 :)
-declare variable $zorba-csv:errWrongParam as xs:QName := fn:QName($zorba-csv:csvNS, "zorba-csv:WrongParam");
+declare variable $csv:errWrongParam as xs:QName := fn:QName($csv:csvNS, "csv:WrongParam");
 
 (:~
  : Parse a CSV or fixed size text and convert to XML.<br/>
  : By default each line is converted to a &lt;row> element, and each field to a &lt;column> element inside &lt;row>.<br/>
  : @param $csv the string containing the csv or fixed size text.
- : @param $options having format<br/>
+ : @param $options this parameter is validated against "http://www.zorba-xquery.com/modules/converters/csv-options" schema. The format is:<br/>
  :    &lt;csv-options:options><br/>
  :        &lt;csv  [separator="default comma ,"] ? <br/>
  :          [quote-char="default double quotes &amp;quote;"]? <br/>
@@ -189,7 +189,7 @@ declare variable $zorba-csv:errWrongParam as xs:QName := fn:QName($zorba-csv:csv
  :     </dd>
  :    </dl>
  : @return a sequence of row elements, one for each line in csv
- : @error zorba-csv:WrongParam if the options parameter doesn't have the name "options".
+ : @error csv:WrongParam if the options parameter doesn't have the name "options".
  : @example test/Queries/converters/csv/csv_parse1.xq
  : @example test/Queries/converters/csv/csv_parse2.xq
  : @example test/Queries/converters/csv/csv_parse3.xq
@@ -199,7 +199,7 @@ declare variable $zorba-csv:errWrongParam as xs:QName := fn:QName($zorba-csv:csv
  : @example test/Queries/converters/csv/txt_parse5.xq
  : @example test/Queries/converters/csv/txt_parse8.xq
 :)
-declare function zorba-csv:parse($csv as xs:string,
+declare function csv:parse($csv as xs:string,
                                  $options as element(csv-options:options)?) as element()*
 {
   let $validated-options :=
@@ -211,10 +211,10 @@ declare function zorba-csv:parse($csv as xs:string,
   else
     validate{$options}
   return
-    zorba-csv:parse-internal($csv, $validated-options)
+    csv:parse-internal($csv, $validated-options)
 };
                                  
-declare %private function zorba-csv:parse-internal($csv as xs:string,
+declare %private function csv:parse-internal($csv as xs:string,
                                  $options as element(csv-options:options, csv-options:optionsType)?) as element()* external;
                                  
 (:~
@@ -332,7 +332,7 @@ declare %private function zorba-csv:parse-internal($csv as xs:string,
  :
  : @param $xml a sequence of elements, each element representing a row. The name of each row element is ignored.
  :     The childs of each row are the column fields.
- : @param $options The options parameter. See the function description for details.
+ : @param $options The options parameter. See the function description for details. This parameter is validated against "http://www.zorba-xquery.com/modules/converters/csv-options" schema.
  : @return the csv or fixed size text as string containing all the lines
  : @example test/Queries/converters/csv/csv_serialize1.xq
  : @example test/Queries/converters/csv/csv_serialize2.xq
@@ -344,7 +344,7 @@ declare %private function zorba-csv:parse-internal($csv as xs:string,
  : @example test/Queries/converters/csv/txt_serialize6.xq
  : @example test/Queries/converters/csv/txt_parse_serialize6.xq
 :)
-declare function zorba-csv:serialize($xml as element()*,
+declare function csv:serialize($xml as element()*,
 									$options as element(csv-options:options)?) as xs:string
 {
   let $validated-options :=
@@ -356,8 +356,8 @@ declare function zorba-csv:serialize($xml as element()*,
   else
     validate{$options}
   return
-    zorba-csv:serialize-internal($xml, $validated-options)
+    csv:serialize-internal($xml, $validated-options)
 };
 																		
-declare %private function zorba-csv:serialize-internal($xml as element()*,
+declare %private function csv:serialize-internal($xml as element()*,
 									$options as element(csv-options:options, csv-options:optionsType)?) as xs:string external;
