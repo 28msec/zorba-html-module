@@ -243,7 +243,7 @@ SerializeFunction::evaluate(
     stream_sequence->theFactory = theModule->getItemFactory();
     stream_sequence->streamable_item =
     theModule->getItemFactory()->createStreamableString(
-        *(stream_sequence->is), StringStreamSequence::destroyStream);
+        *(stream_sequence->is), &StringStreamSequence::releaseStream);
 
     return ItemSequence_t(stream_sequence);
 

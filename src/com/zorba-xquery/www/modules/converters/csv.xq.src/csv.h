@@ -223,7 +223,7 @@ class CSVSerializeFunction : public ContextualExternalFunction
     virtual bool reset();
 
     static void
-    destroyStream(std::istream& stream) { delete &stream; }
+    releaseStream(std::istream* stream) { delete stream; }
 
   private:
     void csv_get_headers(  Item node, 

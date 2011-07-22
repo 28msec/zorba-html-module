@@ -144,7 +144,7 @@ namespace zorba
         virtual bool reset();
 
         static void
-        destroyStream(std::istream& stream) { delete &stream; }
+        releaseStream(std::istream* stream) { delete stream; }
 
       };
     public:

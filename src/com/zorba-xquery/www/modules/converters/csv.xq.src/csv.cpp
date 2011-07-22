@@ -1244,7 +1244,7 @@ CSVSerializeFunction::evaluate(const Arguments_t& args,
   stream_sequence->csv_options.parse(options_item, theModule->getItemFactory());
   stream_sequence->streamable_item =
     theModule->getItemFactory()->createStreamableString(
-        *(stream_sequence->is), StringStreamSequence::destroyStream, true /* seekable */);
+        *(stream_sequence->is), &StringStreamSequence::releaseStream, true /* seekable */);
 
   return ItemSequence_t(stream_sequence);
 }
