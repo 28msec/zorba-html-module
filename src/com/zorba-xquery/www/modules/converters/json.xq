@@ -19,7 +19,7 @@
   : <p>In order to enable JSON processing with XQuery, Zorba implements a set
   : of functions that open XQuery developers the door to process JSON
   : data. Specifically, this module provides two types of functions. Functions
-  : to
+  : to:
   : <ul>
   :   <li>parse JSON and convert it to XDM and</li>
   :   <li>serialize XDM in order to output JSON.</li>
@@ -27,43 +27,42 @@
   : </p>
   :
   : <p>Both types of functions are available to parse and serialize two
-  : types of XDM-JSON mappings, respectively. The first mapping has been
+  : types of XDM-JSON mappings:<ul><li>the first mapping called in this document 
+  : <strong>simple XDM-JSON</strong> has been
   : <a href="http://snelson.org.uk/archives/2008/02/parsing_json_in.php#more">
-  : proposed by John Snelson</a>. The second mapping is called 
-  : <a href="http://jsonml.org/">JsonML</a>. In the following, we
+  : proposed by John Snelson</a></li><li>the second mapping is called 
+  : <a href="http://jsonml.org/">JsonML</a></li></ul>In the following, we
   : briefly describe both mappings.</p>
   : 
   : <h2>Simple XDM-JSON Mapping</h2>
-  : <p>In order to process JSON with XQuery, Zorba implements a mapping between
+  : <ul><li>In order to process JSON with XQuery, Zorba implements a mapping between
   : JSON and XML that was initially proposed by John Snelson in his article
   : <a href="http://snelson.org.uk/archives/2008/02/parsing_json_in.php#more"
-  : target="_blank">Parsing JSON into XQuery</a>.
-  : In this article, he describes the following recursive mapping declarations.
-  : </p>
+  : target="_blank">Parsing JSON into XQuery</a></li></ul>
   :
   : <h2>JsonML Mapping</h2>
-  : <p>
-  : <a href="http://jsonml.org" target="_blank">JSonML</a> (JSON Markup Language)
-  : is an application of the JSON format.
-  : The purpose of JSonML is to provide a compact format for transporting
-  : XML-based markup as JSon. In contrast to the simple JSON mapping described above
-  : JsonML allows a lossless conversion back and forth.</p>
+  : <ul>
+  : <li><a href="http://jsonml.org" target="_blank">JSonML</a> (JSON Markup Language)
+  : is an application of the JSON format.</li>
+  : <li>The purpose of JSonML is to provide a compact format for transporting
+  : XML-based markup as JSon. In contrast to the <strong>simple XDM-JSON</strong> mapping described above
+  : <strong>JsonML</strong> allows a lossless conversion back and forth.</li></ul>
   :
   : <h2>Important Notes:</h2>
-  : <p>
-  : Zorba uses <a xmlns:xqdoc="http://www.xqdoc.org/1.0" href="http://www.digip.org/jansson/">Jansson library</a>
-  : for manipulating JSON data that implements the <a href="http://tools.ietf.org/html/rfc4627.html"><strong>RFC 4627</strong></a>. <br />
+  : <ul><li>Zorba uses <a xmlns:xqdoc="http://www.xqdoc.org/1.0" href="http://www.digip.org/jansson/">Jansson library</a>
+  : for manipulating JSON data that implements the <a href="http://tools.ietf.org/html/rfc4627.html"><strong>RFC 4627</strong></a>.
   : <a xmlns:xqdoc="http://www.xqdoc.org/1.0" href="http://www.digip.org/jansson/">Jansson library</a> guarantees that the items are <strong>UNIQUE</strong>, it <strong>DOES NOT</strong> guarantee that they 
-  : are returned in the same exact order.<br />However, this is an approved behaviour because returning the items in the same exact order if not specified in the to the 
-  : <a href="http://tools.ietf.org/html/rfc4627#section-4"><strong>RFC 4627 section 4.</strong></a></p>
-  : <p>Also, please make sure that the JSON strings you want to pass to Zorba are valid. <br />
-  : According to the <a href="http://tools.ietf.org/html/rfc4627.html"><strong>RFC 4627</strong></a> a valid JSON string begins with either an 
-  : <a href="http://www.json.org/array.gif">array</a> or an <a href="http://www.json.org/object.gif">object</a>.<br />
-  : You can use for instance <a href="http://www.jsonlint.com/">JSONLint JSON Validator</a> to make sure the JSON is valid.</p>
-  : <p>We have tested against the following Jansson library versions:
+  : are returned in the same exact order. However, this is an approved behaviour because returning the items in the same exact order if not specified in the to the 
+  : <a href="http://tools.ietf.org/html/rfc4627#section-4"><strong>RFC 4627 section 4.</strong></a></li>
+  : <li>Also, please make sure that the JSON strings you want to pass to Zorba are valid. According to the 
+  : <a href="http://tools.ietf.org/html/rfc4627.html"><strong>RFC 4627</strong></a> a valid JSON string begins with either an 
+  : <a href="http://www.json.org/array.gif">array</a> or an <a href="http://www.json.org/object.gif">object</a>.
+  : You can use for instance <a href="http://www.jsonlint.com/">JSONLint JSON Validator</a> to make sure the JSON is valid.</li>
+  : <li>We have tested against the following Jansson library versions:
   : <ul><li><a href="http://www.digip.org/jansson/doc/1.2/">Jansson 1.2.1</a></li>
   :     <li><a href="http://www.digip.org/jansson/doc/1.3/">Jansson 1.3</a></li>
-  :     <li><a href="http://www.digip.org/jansson/doc/2.0/">Jansson 2.0</a></li></ul> available from <a href="http://www.digip.org/jansson/releases/">Jansson releases</a>.</p>
+  :     <li><a href="http://www.digip.org/jansson/doc/2.0/">Jansson 2.0</a></li></ul> available from 
+  : <a href="http://www.digip.org/jansson/releases/">Jansson releases</a>.</li></ul>
   :
   : @author Sorin Nasoi
   : @library <a href="http://www.digip.org/jansson/">Jansson library for encoding, decoding and manipulating JSON data</a>

@@ -51,8 +51,7 @@ declare variable $csv:errWrongParam as xs:QName := fn:QName($csv:csvNS, "csv:Wro
 (:~
  : Parse a CSV or fixed size text and convert to XML.<br/>
  : By default each line is converted to a &lt;row> element, and each field to a &lt;column> element inside &lt;row>.<br/>
- : @param $csv the string containing the csv or fixed size text.
- : @param $options this parameter is validated against "http://www.zorba-xquery.com/modules/converters/csv-options" schema. The format is:<br/>
+ : The format of the param $options is:<br/>
  :    &lt;csv-options:options><br/>
  :        &lt;csv  [separator="default comma ,"] ? <br/>
  :          [quote-char="default double quotes &amp;quote;"]? <br/>
@@ -183,11 +182,12 @@ declare variable $csv:errWrongParam as xs:QName := fn:QName($csv:csvNS, "csv:Wro
  :          &lt;c>field1&lt;/c><br/>
  :          &lt;c>field2&lt;/c><br/>
  :          .......<br/>
- :        &lt;/r></i><br/>
- :        <br/>
- :        If this parameter is not specified, the row name is by default "row" and the column name is by default "column".
+ :        &lt;/r></i><br/>        
  :     </dd>
  :    </dl>
+ : @param $csv the string containing the csv or fixed size text.
+ : @param $options this parameter is validated against "http://www.zorba-xquery.com/modules/converters/csv-options" schema. 
+ : If this parameter is not specified, the row name is by default "row" and the column name is by default "column". 
  : @return a sequence of row elements, one for each line in csv
  : @error csv:WrongParam if the options parameter doesn't have the name "options".
  : @example test/Queries/converters/csv/csv_parse1.xq
@@ -332,7 +332,8 @@ declare %private function csv:parse-internal($csv as xs:string,
  :
  : @param $xml a sequence of elements, each element representing a row. The name of each row element is ignored.
  :     The childs of each row are the column fields.
- : @param $options The options parameter. See the function description for details. This parameter is validated against "http://www.zorba-xquery.com/modules/converters/csv-options" schema.
+ : @param $options The options parameter. See the function description for details. 
+ : This parameter is validated against "http://www.zorba-xquery.com/modules/converters/csv-options" schema.
  : @return the csv or fixed size text as string containing all the lines
  : @example test/Queries/converters/csv/csv_serialize1.xq
  : @example test/Queries/converters/csv/csv_serialize2.xq
