@@ -79,6 +79,10 @@ CREATE_TEST_SOURCELIST (
   StreambufUnitTests.cpp
   streambuftest.cpp
 )
-ADD_EXECUTABLE ("StreambufUnitTests" ${StreambufUnitTests} csv.xq.src/stringiterator_streambuf.cpp)
+ADD_EXECUTABLE (StreambufUnitTests ${StreambufUnitTests} csv.xq.src/stringiterator_streambuf.cpp)
+SET_TARGET_PROPERTIES (StreambufUnitTests PROPERTIES
+  FOLDER "Tests"
+)
+
 ADD_TEST ("streamable_string_streambuf" StreambufUnitTests "streambuftest")
 ADD_TEST_DIRECTORY("${PROJECT_SOURCE_DIR}/test")
