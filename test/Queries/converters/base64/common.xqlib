@@ -51,7 +51,7 @@ declare %ann:nondeterministic %ann:sequential function commons:testReadAndCompar
 ", fn:serialize($xml))
 };
 
-declare %ann:nondeterministic %ann:sequential function commons:testReadBinary($path as xs:string) as xs:base64Binary {
+declare %ann:nondeterministic function commons:testReadBinary($path as xs:string) as xs:base64Binary {
   file:read-binary($path)
 };
 
