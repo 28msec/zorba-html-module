@@ -87,6 +87,8 @@ import module namespace zorba-schema = "http://www.zorba-xquery.com/modules/sche
  :)
 import schema namespace json-options = "http://www.zorba-xquery.com/modules/converters/json-options";
 
+declare namespace err = "http://www.w3.org/2005/xqt-errors";
+
 declare namespace ver = "http://www.zorba-xquery.com/options/versioning";
 declare option ver:module-version "1.0";
 
@@ -130,9 +132,9 @@ declare function json:parse(
                                   validate{$options} 
     return
       json:parse-internal($arg, $validated-options)
-  } catch * ($ecode, $desc)
+  } catch *
   {
-    fn:error($json:errWrongParam, $desc)
+    fn:error($json:errWrongParam, $err:description)
   }
 };
 
@@ -224,9 +226,9 @@ declare function json:serialize(
                                   validate{$options} 
     return
       json:serialize-internal($xml, $validated-options)
-  } catch * ($ecode, $desc)
+  } catch * 
   {
-    fn:error($json:errWrongParam, $desc)
+    fn:error($json:errWrongParam, $err:description)
   }
 };
 
