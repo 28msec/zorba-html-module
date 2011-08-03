@@ -5,7 +5,7 @@ Note the character escaping for the QNames. Also the empty line from subheader i
 The csv has been taken from http://data.gov.
 :)
 import schema namespace csv-options="http://www.zorba-xquery.com/modules/converters/csv-options";
-import module namespace zorba-csv = "http://www.zorba-xquery.com/modules/converters/csv";
+import module namespace csv = "http://www.zorba-xquery.com/modules/converters/csv";
 import module namespace file="http://expath.org/ns/file";
 
 let $options := 
@@ -18,8 +18,8 @@ validate{
        quote-escape="&quot;&quot;"/>
 </csv-options:options> }
 return
-zorba-csv:serialize(
-        zorba-csv:parse(file:read-text(fn:resolve-uri("Hospital Outpatient Payments for 61 Commonly Performed Procedures, CY 2008 Data.csv")),
+csv:serialize(
+        csv:parse(file:read-text(fn:resolve-uri("Hospital Outpatient Payments for 61 Commonly Performed Procedures, CY 2008 Data.csv")),
                         $options),
         $options) 
 

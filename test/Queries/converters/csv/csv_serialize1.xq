@@ -1,8 +1,8 @@
 (: Simple example of serializing xml to csv :)
 
-import module namespace zorba-csv = "http://www.zorba-xquery.com/modules/converters/csv";
+import module namespace csv = "http://www.zorba-xquery.com/modules/converters/csv";
 
-zorba-csv:serialize(
+csv:serialize(
 <row>
   <column>f1</column>
   <column>f2</column>

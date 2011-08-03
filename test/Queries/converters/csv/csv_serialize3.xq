@@ -1,8 +1,8 @@
 (: Serialize xml nodes to csv, with header and escaping some fields. :)
 import schema namespace csv-options="http://www.zorba-xquery.com/modules/converters/csv-options";
-import module namespace zorba-csv = "http://www.zorba-xquery.com/modules/converters/csv";
+import module namespace csv = "http://www.zorba-xquery.com/modules/converters/csv";
 
-zorba-csv:serialize(
+csv:serialize(
 (<row1>
   <f1>value1</f1>
   <f2>"value2"</f2>

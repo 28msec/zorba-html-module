@@ -80,7 +80,7 @@ module namespace json = "http://www.zorba-xquery.com/modules/converters/json";
 (:~
  : Import module for checking if json options element is validated.
  :)
-import module namespace zorba-schema = "http://www.zorba-xquery.com/modules/schema";
+import module namespace schemaOptions = "http://www.zorba-xquery.com/modules/schema";
 
 (:~
  : Contains the definitions of the json options element.
@@ -126,7 +126,7 @@ declare function json:parse(
     let $validated-options := if(empty($options)) then
                                 $options
                               else
-                                if(zorba-schema:is-validated($options)) then
+                                if(schemaOptions:is-validated($options)) then
                                   $options
                                 else
                                   validate{$options} 
@@ -220,7 +220,7 @@ declare function json:serialize(
     let $validated-options := if(empty($options)) then
                                 $options
                               else
-                                if(zorba-schema:is-validated($options)) then
+                                if(schemaOptions:is-validated($options)) then
                                   $options
                                 else
                                   validate{$options} 

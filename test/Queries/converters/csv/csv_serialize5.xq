@@ -3,7 +3,7 @@ Note that the last node has element names that do not correpond to the header na
 so it is not processed.
 :)
 import schema namespace csv-options="http://www.zorba-xquery.com/modules/converters/csv-options";
-import module namespace zorba-csv = "http://www.zorba-xquery.com/modules/converters/csv";
+import module namespace csv = "http://www.zorba-xquery.com/modules/converters/csv";
 
 
 let $options := 
@@ -15,8 +15,8 @@ validate{
        quote-escape="&quot;&quot;"/>
 </csv-options:options>}
 return
-zorba-csv:parse(
-zorba-csv:serialize(
+csv:parse(
+csv:serialize(
 (<row1>
   <f1>value1</f1>
   <f2>"value2"</f2>

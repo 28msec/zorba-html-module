@@ -34,7 +34,7 @@ module namespace html = "http://www.zorba-xquery.com/modules/converters/html";
 (:~
  : Import module for checking if html options element is validated.
  :)
-import module namespace zorba-schema = "http://www.zorba-xquery.com/modules/schema";
+import module namespace schemaOptions = "http://www.zorba-xquery.com/modules/schema";
 
 (:~
  : Contains the definitions of the html options element.
@@ -112,7 +112,7 @@ declare function html:parse (
     let $validated-options := if(empty($options)) then
                                 $options
                               else
-                                if(zorba-schema:is-validated($options)) then
+                                if(schemaOptions:is-validated($options)) then
                                   $options
                                 else
                                   validate{$options} 

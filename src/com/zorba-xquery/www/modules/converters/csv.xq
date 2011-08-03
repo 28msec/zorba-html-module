@@ -28,7 +28,7 @@ module namespace csv = "http://www.zorba-xquery.com/modules/converters/csv";
 (:~
  : Import module for checking if csv options element is validated.
  :)
-import module namespace zorba-schema = "http://www.zorba-xquery.com/modules/schema";
+import module namespace schemaOptions = "http://www.zorba-xquery.com/modules/schema";
 
 (:~
  : Contains the definitions of the csv options element.
@@ -208,7 +208,7 @@ declare function csv:parse($csv as xs:string,
   if(empty($options)) then
     $options
   else
-  if(zorba-schema:is-validated($options)) then
+  if(schemaOptions:is-validated($options)) then
     $options
   else
     validate{$options}
@@ -354,7 +354,7 @@ declare function csv:serialize($xml as element()*,
   if(empty($options)) then
     $options
   else
-  if(zorba-schema:is-validated($options)) then
+  if(schemaOptions:is-validated($options)) then
     $options
   else
     validate{$options}

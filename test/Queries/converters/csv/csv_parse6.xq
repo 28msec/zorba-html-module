@@ -4,10 +4,10 @@ Data continues after subheaders.
 The csv file is taken from http://data.gov.
 :)
 import schema namespace csv-options="http://www.zorba-xquery.com/modules/converters/csv-options";
-import module namespace zorba-csv = "http://www.zorba-xquery.com/modules/converters/csv";
+import module namespace csv = "http://www.zorba-xquery.com/modules/converters/csv";
 import module namespace file="http://expath.org/ns/file";
 
-zorba-csv:parse(file:read-text(fn:resolve-uri("Hospital Outpatient Payments for 61 Commonly Performed Procedures, CY 2008 Data.csv")), 
+csv:parse(file:read-text(fn:resolve-uri("Hospital Outpatient Payments for 61 Commonly Performed Procedures, CY 2008 Data.csv")),
 validate{
 <csv-options:options>
   <first-row-is-header line="5-8"/>

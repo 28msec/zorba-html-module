@@ -4,7 +4,7 @@ The align attributes are ignored in the parse function.
 The data file is taken from http://data.gov.
 :)
 import schema namespace csv-options="http://www.zorba-xquery.com/modules/converters/csv-options";
-import module namespace zorba-csv = "http://www.zorba-xquery.com/modules/converters/csv";
+import module namespace csv = "http://www.zorba-xquery.com/modules/converters/csv";
 import module namespace file="http://expath.org/ns/file";
 
 let $options :=
@@ -23,8 +23,8 @@ validate{
 </csv-options:options> }   
 return
 let $result := 
-zorba-csv:serialize(
-zorba-csv:parse(file:read-text(fn:resolve-uri("PUAOSL95.TXT")), $options),
+csv:serialize(
+csv:parse(file:read-text(fn:resolve-uri("PUAOSL95.TXT")), $options),
                 $options)
 return 
   $result

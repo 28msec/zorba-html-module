@@ -1,5 +1,5 @@
 import schema namespace csv-options="http://www.zorba-xquery.com/modules/converters/csv-options";
-import module namespace zorba-csv = "http://www.zorba-xquery.com/modules/converters/csv";
+import module namespace csv = "http://www.zorba-xquery.com/modules/converters/csv";
 import module namespace file="http://expath.org/ns/file";
 
 
@@ -16,5 +16,5 @@ let $options :=
   </xml-nodes>
 </csv-options:options>
 return
-zorba-csv:serialize(zorba-csv:parse(file:read-text(fn:resolve-uri("tri_2008_NH_v08.txt")), $options),
+csv:serialize(csv:parse(file:read-text(fn:resolve-uri("tri_2008_NH_v08.txt")), $options),
                     $options)
