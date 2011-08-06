@@ -664,7 +664,7 @@ bool CSVParseFunction::CSVItemSequence::buildNodeTree(zorba::Item parent,
     return false;
 //  addIndentation(parent, indent_level, item_factory);
 
-  fieldNode = item_factory->createElementNode(parent, current->name, item_type, false, false, ns_binding);
+  fieldNode = item_factory->createElementNode(parent, current->name, item_type, true, false, ns_binding);
   
   if(current->children.size())
   {
@@ -782,7 +782,7 @@ bool CSVParseFunction::CSVItemSequence::next(Item& result)
   while(line_index <= csv_options.start_from_row);
 
 
-  result = item_factory->createElementNode(null_parent, csv_options.row_qname, item_type, false, false, ns_binding);
+  result = item_factory->createElementNode(null_parent, csv_options.row_qname, item_type, true, false, ns_binding);
 
   if(header_qnames.size())
   {
@@ -813,7 +813,7 @@ bool CSVParseFunction::CSVItemSequence::next(Item& result)
 
       addIndentation(result, 2, item_factory);
 
-      fieldNode = item_factory->createElementNode(result, csv_options.column_qname, item_type, false, false, ns_binding);
+      fieldNode = item_factory->createElementNode(result, csv_options.column_qname, item_type, true, false, ns_binding);
 
       if(!line[i].empty())
         item_factory->createTextNode(fieldNode, line[i]);

@@ -20,6 +20,7 @@ unsigned int utf8_sequence_length(const char* lead_it);
 namespace csv {
 
 StreamWrapper::StreamWrapper(Item string_item, unsigned int temp_buf_size)
+  : theStringItem(string_item)
 {
   //this->string_item = string_item;
 	csv_is = &string_item.getStream();

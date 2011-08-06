@@ -46,6 +46,7 @@ public:
   char *end_str;
   unsigned int temp_buf_size;
   unsigned int utf8_len;
+  Item theStringItem; // need to keep this item to make sure it lives as long as the StreamWrapper Does
 
   StreamWrapper(Item string_item, unsigned int temp_buf_size);
   virtual ~StreamWrapper();
