@@ -61,5 +61,5 @@ json:parse(('
 ]
 ]
 ]'),<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-              <jsonParam name="mapping" value="json-ml" />
+              <json-param name="mapping" value="json-ml" />
             </options>)

@@ -23,7 +23,7 @@ json:parse(('
   ]
 ]'),<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" 
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-              <jsonParam name="mapping" value="json-ml" />
+              <json-param name="mapping" value="json-ml" />
             </options>)
 
 (:
@@ -88,6 +88,6 @@ json:parse(('
 ]
 ]'),<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" 
              xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance">
-              <jsonParam name="mapping" value="json-ml" />
+              <json-param name="mapping" value="json-ml" />
             </options>)
 :)

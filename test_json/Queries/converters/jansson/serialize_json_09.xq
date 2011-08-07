@@ -11,5 +11,5 @@ json:serialize((<json type="object">
         <item type="string">value2</item>
     </pair>
   </json>),<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-              <jsonParam name="mapping" value="simple-json" />
+              <json-param name="mapping" value="simple-json" />
             </options>)

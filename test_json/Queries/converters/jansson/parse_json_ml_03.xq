@@ -4,5 +4,5 @@ import module namespace json = "http://www.zorba-xquery.com/modules/converters/j
 import schema namespace html-options="http://www.zorba-xquery.com/modules/converters/json-options";
 
 json:parse(<a/>,<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-              <jsonParam name="mapping" value="json-ml" />
+              <json-param name="mapping" value="json-ml" />
             </options>)

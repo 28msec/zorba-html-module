@@ -33,5 +33,5 @@ json:parse(('[
       "646 123-4567"
   ]
  }]'),<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-              <jsonParam name="mapping" value="simple-json" />
+              <json-param name="mapping" value="simple-json" />
             </options>)

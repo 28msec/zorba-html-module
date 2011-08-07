@@ -16,8 +16,8 @@ declare variable $local:json :=
     }';
 
 json:serialize((json:parse(($local:json),<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-              <jsonParam name="mapping" value="simple-json" />
+              <json-param name="mapping" value="simple-json" />
             </options>)),<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-              <jsonParam name="mapping" value="simple-json" />
+              <json-param name="mapping" value="simple-json" />
             </options>)
 

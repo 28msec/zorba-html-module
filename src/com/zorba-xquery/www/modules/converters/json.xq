@@ -119,14 +119,11 @@ declare variable $json:errWrongParam as xs:QName := fn:QName($json:jsonNS, "json
  :)
 declare function json:parse(
   $arg as xs:string?,
-  $options as element(json-options:options)?
+  $options as element(json-options:options)
 ) as document-node(element(*, xs:untyped))
 {
   try {
-    let $validated-options := if(empty($options)) then
-                                $options
-                              else
-                                if(schemaOptions:is-validated($options)) then
+    let $validated-options := if(schemaOptions:is-validated($options)) then
                                   $options
                                 else
                                   validate{$options} 
@@ -146,7 +143,7 @@ declare function json:parse(
  :<pre class="brush: xquery;"> 
  :  json:parse($arg,
  :  <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
- :    <jsonParam name="mapping" value="simple-json" />
+ :    <json-param name="mapping" value="simple-json" />
  :  </options>)</pre>
  :
  : @param $arg a sequence of valid JSON strings.
@@ -160,7 +157,7 @@ declare function json:parse(
 {
   json:parse-internal($arg,
                       <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-                        <jsonParam name="mapping" value="simple-json" />
+                        <json-param name="mapping" value="simple-json" />
                       </options>)
 };
 
@@ -172,7 +169,7 @@ declare function json:parse(
  : <pre class="brush: xquery;">
  :  json:parse($arg,
  :  <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
- :    <jsonParam name="mapping" value="json-ml" />
+ :    <json-param name="mapping" value="json-ml" />
  :  </options>)
  : </pre>
  :
@@ -187,7 +184,7 @@ declare function json:parse-ml(
 {
   json:parse-internal($arg,
                       <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-                        <jsonParam name="mapping" value="json-ml" />
+                        <json-param name="mapping" value="json-ml" />
                       </options>)
 };
 
@@ -213,17 +210,14 @@ declare %private function json:parse-internal(
  :)
 declare function json:serialize(
   $xml as item()*, 
-  $options as element(json-options:options)? 
+  $options as element(json-options:options) 
 ) as xs:string
 {
   try {
-    let $validated-options := if(empty($options)) then
+    let $validated-options := if(schemaOptions:is-validated($options)) then
                                 $options
                               else
-                                if(schemaOptions:is-validated($options)) then
-                                  $options
-                                else
-                                  validate{$options} 
+                                validate{$options} 
     return
       json:serialize-internal($xml, $validated-options)
   } catch * 
@@ -241,7 +235,7 @@ declare function json:serialize(
  :<pre class="brush: xquery;">
  :  json:serialize($xml,
  :  <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
- :    <jsonParam name="mapping" value="simple-json" />
+ :    <json-param name="mapping" value="simple-json" />
  :  </options>)</pre>
  :
  : @param $xml a sequence of nodes.
@@ -255,7 +249,7 @@ declare function json:serialize(
 {
   json:serialize-internal($xml,
                           <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-                            <jsonParam name="mapping" value="simple-json" />
+                            <json-param name="mapping" value="simple-json" />
                           </options>)
 };
 
@@ -267,7 +261,7 @@ declare function json:serialize(
  : This function is the equivalent of calling 
  :<pre class="brush: xquery;">
  :  json:serialize($xml,<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
- :    <jsonParam name="mapping" value="json-ml" />
+ :    <json-param name="mapping" value="json-ml" />
  :  </options>)</pre>
  :
  : @param $xml a sequence of nodes.
@@ -281,7 +275,7 @@ declare function json:serialize-ml(
 {
   json:serialize-internal($xml,
                           <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-                            <jsonParam name="mapping" value="json-ml" />
+                            <json-param name="mapping" value="json-ml" />
                           </options>)
 };
 
