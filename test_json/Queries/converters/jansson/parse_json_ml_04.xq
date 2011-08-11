@@ -12,5 +12,5 @@ json:parse(('{
          "state": "NY",
          "postalCode": 10021
      }'),<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-              <json-param name="mapping" value="json-ml" />
+              <json-param name="mapping" value="json-ml" type="array"/>
             </options>)

@@ -169,7 +169,7 @@ declare function json:parse(
  : <pre class="brush: xquery;">
  :  json:parse($arg,
  :  <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
- :    <json-param name="mapping" value="json-ml" />
+ :    <json-param name="mapping" value="json-ml" type="array"/>
  :  </options>)
  : </pre>
  :
@@ -184,7 +184,7 @@ declare function json:parse-ml(
 {
   json:parse-internal($arg,
                       <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-                        <json-param name="mapping" value="json-ml" />
+                        <json-param name="mapping" value="json-ml" type="array"/>
                       </options>)
 };
 
@@ -261,7 +261,7 @@ declare function json:serialize(
  : This function is the equivalent of calling 
  :<pre class="brush: xquery;">
  :  json:serialize($xml,<options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
- :    <json-param name="mapping" value="json-ml" />
+ :    <json-param name="mapping" value="json-ml" type="array"/>
  :  </options>)</pre>
  :
  : @param $xml a sequence of nodes.
@@ -275,7 +275,7 @@ declare function json:serialize-ml(
 {
   json:serialize-internal($xml,
                           <options xmlns="http://www.zorba-xquery.com/modules/converters/json-options" >
-                            <json-param name="mapping" value="json-ml" />
+                            <json-param name="mapping" value="json-ml" type="array"/>
                           </options>)
 };
 
