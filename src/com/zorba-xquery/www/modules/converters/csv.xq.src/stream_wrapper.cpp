@@ -47,8 +47,12 @@ void StreamWrapper::read_buf()
   }
   end_str = tempstr +  (end_str-start_str);
   start_str = tempstr;
-  csv_is->read(end_str, temp_buf_size - (end_str-start_str));
-  end_str += csv_is->gcount();
+  std::streambuf  *csv_buf = csv_is->rdbuf();
+  std::streamsize  readlen = csv_buf->sgetn(end_str, temp_buf_size - (end_str-start_str));
+  if (readlen != (temp_buf_size - (end_str-start_str)))
+    csv_is->setstate(std::ios_base::eofbit | std::ios_base::failbit);	// short read
+  end_str += readlen;
+
 }
 
 bool StreamWrapper::is_end()

@@ -12,7 +12,7 @@ return <row>{$person/data:name}
         </row>, 
 validate{
 <csv-options:options>
-  <first-row-is-header/>
+  <first-row-is-header ignore-foreign-input="true"/>
   <csv separator=","
        quote-char="&quot;"
        quote-escape="&quot;&quot;"/>

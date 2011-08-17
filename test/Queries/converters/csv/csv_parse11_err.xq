@@ -7,7 +7,7 @@ f5, f6, "f7", "f8
 ""f9",f8', 
 validate{
 <csv-options:options>
-  <first-row-is-header accept-all-lines="true"/>
+  <first-row-is-header/>
   <csv separator=","
        quote-char="&quot;"
        quote-escape="&quot;&quot;"/>

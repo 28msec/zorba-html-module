@@ -93,6 +93,8 @@ public:
   unsigned int   start_from_row;//default 1
   unsigned int   last_row;//default 0
   bool           add_last_void_columns;
+  bool           ignore_foreign_input;
+  bool           accept_all_lines;
   Item   row_qname;
   bool   column_specified;
   Item   column_qname;
@@ -239,6 +241,7 @@ class CSVSerializeFunction : public ContextualExternalFunction
                            std::string &result_string);
     void txt_write_line_to_string(std::vector<String> &line,
                                 std::string &result_string);
+    void check_foreign_input(Iterator_t children);
   };
 public:
   CSVSerializeFunction(const CSVModule* aModule) : theModule(aModule) {}

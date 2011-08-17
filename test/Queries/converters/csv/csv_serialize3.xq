@@ -24,7 +24,7 @@ csv:serialize(
 </row3>),
 validate{
 <csv-options:options>
-  <first-row-is-header/>
+  <first-row-is-header ignore-foreign-input="true"/>
   <csv separator=","
        quote-char="&quot;"
        quote-escape="&quot;&quot;"/>

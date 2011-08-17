@@ -10,7 +10,7 @@ csv:parse(file:read-text(fn:resolve-uri("tri_2008_NH_v08.txt")),
 
 validate{
 <csv-options:options>
-  <first-row-is-header/>
+  <first-row-is-header accept-all-lines="true"/>
   <csv separator="&#009;"
        quote-char=""
        quote-escape=""/>

@@ -5,7 +5,7 @@ import module namespace file="http://expath.org/ns/file";
 
 let $options :=
 <csv-options:options>
-  <first-row-is-header/>
+  <first-row-is-header accept-all-lines="true"/>
   <csv separator="&#009;"
        quote-char=""
        quote-escape=""/>

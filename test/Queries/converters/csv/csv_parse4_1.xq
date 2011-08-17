@@ -6,7 +6,7 @@ csv:parse(file:read-text(fn:resolve-uri("ME_1_2008_v08.txt")),
 
 validate{
 <csv-options:options>
-  <first-row-is-header/>
+  <first-row-is-header accept-all-lines="true"/>
   <add-last-void-columns/>
   <csv separator="&#009;"
        quote-char=""

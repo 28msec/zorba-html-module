@@ -22,6 +22,7 @@
 #include <iostream>
 #include <limits.h>
 #include <string.h>
+#include <assert.h>
 
 #include <zorba/zorba.h>
 #include <zorba/store_consts.h>
@@ -188,6 +189,8 @@ CSVOptions::CSVOptions()
   last_row = 0;
   column_specified = false;
   add_last_void_columns = false;
+  ignore_foreign_input = false;
+  accept_all_lines = false;
   //row_name = "row";
   //column_name = "column";
   last_column_position_is_computed = false;
@@ -208,11 +211,10 @@ void CSVOptions::parse(zorba::Item options_node, ItemFactory *item_factory)
       options_node.getNodeName(options_qname);
       lErrorMessage << "Options field must be of element options instead of " << options_qname.getStringValue();
       Item errWrongParamQName;
-      String errNS("http://www.zorba-xquery.com/modules/csv");
       String errName("WrongParam");
-      errWrongParamQName = item_factory->createQName(errNS, errName);
+      errWrongParamQName = item_factory->createQName(CSVModule::theModule, errName);
       String errDescription(lErrorMessage.str());
-      USER_EXCEPTION(errWrongParamQName, errDescription);
+      throw USER_EXCEPTION(errWrongParamQName, errDescription);
     }
     zorba::Item   xmlnode_item;
     if(getChild(options_node, "xml-nodes", "", xmlnode_item))
@@ -367,6 +369,18 @@ void CSVOptions::parse(zorba::Item options_node, ItemFactory *item_factory)
           if(last_subheader_row <= first_row_is_header)
             last_subheader_row = 0;
         }
+      }
+      if(getAttribute(first_header_item, "ignore-foreign-input", attr_value))
+      {
+        const char *attr_str = attr_value.c_str();
+        if(!strcmp(attr_str, "true"))
+          ignore_foreign_input = true;
+      }
+      if(getAttribute(first_header_item, "accept-all-lines", attr_value))
+      {
+        const char *attr_str = attr_value.c_str();
+        if(!strcmp(attr_str, "true"))
+          accept_all_lines = true;
       }
     }
     Item start_row_item;
@@ -732,13 +746,8 @@ bool CSVParseFunction::CSVItemSequence::isOpen() const
 
 bool CSVParseFunction::CSVItemSequence::next(Item& result)
 {
-  if(!is_open)
-  {
-    std::stringstream lSs;
-    lSs << "CSVParseFunction::CSVItemSequence Iterator consumed without open";
-    Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "CSV002");
-    throw USER_EXCEPTION( lQName, lSs.str()); 
-  }
+  assert(is_open);
+
   if(csv_options.first_row_is_header)
   {
     std::vector<std::vector<std::string> > headers;
@@ -760,6 +769,19 @@ bool CSVParseFunction::CSVItemSequence::next(Item& result)
         if(!read_line(line))
           return false;
         line_index++;
+        if(!csv_options.accept_all_lines)
+        {
+          if(line.size() != headers.at(0).size())
+          {
+            std::stringstream lErrorMessage;
+            lErrorMessage << "Header line " << line_index-1 << " has " << line.size() << " items instead of " << headers.at(0).size();
+            Item errWrongParamQName;
+            String errName("WrongInput");
+            errWrongParamQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, errName);
+            String errDescription(lErrorMessage.str());
+            throw USER_EXCEPTION(errWrongParamQName, errDescription);
+          }
+        }
       }
       while(line_index <= csv_options.last_subheader_row);
     }
@@ -786,6 +808,19 @@ bool CSVParseFunction::CSVItemSequence::next(Item& result)
 
   if(header_qnames.size())
   {
+    if(!csv_options.accept_all_lines)
+    {
+      if(line.size() != header_qnames.size())
+      {
+        std::stringstream lErrorMessage;
+        lErrorMessage << "Line " << line_index-1 << " has " << line.size() << " items instead of " << header_qnames.size();
+        Item errWrongParamQName;
+        String errName("WrongInput");
+        errWrongParamQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, errName);
+        String errDescription(lErrorMessage.str());
+        throw USER_EXCEPTION(errWrongParamQName, errDescription);
+      }
+    }
     unsigned int i;
     unsigned int line_pos = 0;
     HeaderNode *prev_parent = NULL;
@@ -839,11 +874,10 @@ CSVParseFunction::evaluate(const Arguments_t& args,
     std::stringstream lErrorMessage;
     lErrorMessage << "An empty-sequence is not allowed as first parameter";
     Item errWrongParamQName;
-    String errNS("http://www.zorba-xquery.com/modules/csv");
     String errName("WrongParam");
-    errWrongParamQName = theModule->getItemFactory()->createQName(errNS, errName);
+    errWrongParamQName = theModule->getItemFactory()->createQName(CSVModule::theModule, errName);
     String errDescription(lErrorMessage.str());
-    USER_EXCEPTION(errWrongParamQName, errDescription);
+    throw USER_EXCEPTION(errWrongParamQName, errDescription);
   
   }
   arg0_iter->close();
@@ -920,6 +954,47 @@ void CSVSerializeFunction::StringStreamSequence::csv_get_headers(  Item node,
   children->close();
 }
 
+void CSVSerializeFunction::StringStreamSequence::check_foreign_input(Iterator_t children)
+{
+  if(csv_options.ignore_foreign_input)
+    return;
+  Item       store_column;
+  while(children->next(store_column))
+  {
+    int column_kind = store_column.getNodeKind();
+    if((column_kind != store::StoreConsts::elementNode) &&
+      (column_kind != store::StoreConsts::textNode))
+      continue;
+    if(column_kind == store::StoreConsts::textNode)
+    {
+      String text_string = store_column.getStringValue();
+      zfn::trim( text_string );
+      if(text_string.empty())
+        continue;
+    }
+
+    //else raise error: we have a foreign element in the <row> element
+    std::stringstream lSs;
+    String    foreign_input;
+    if(column_kind == store::StoreConsts::textNode)
+    {
+      foreign_input = "text node ";
+      foreign_input += store_column.getStringValue();
+    }
+    else
+    {
+      Item element_name;
+      store_column.getNodeName(element_name);
+      foreign_input = "element node ";
+      foreign_input += element_name.getStringValue();
+    }
+    lSs << "The structure of the input rows does not correspond to the header. "
+      "Foreign item discovered:" << foreign_input;
+    Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "ForeignInput");
+    throw USER_EXCEPTION( lQName, lSs.str());
+  }
+}
+
 void CSVSerializeFunction::StringStreamSequence::csv_write_line(
     Item node, 
     std::vector<String>& line,
@@ -928,6 +1003,7 @@ void CSVSerializeFunction::StringStreamSequence::csv_write_line(
   //iterate through all children of the node and get the string values
   Iterator_t   children = node.getChildren();
   Item       store_column;
+  bool has_children = false;
 
   children->open();
   while(children->next(store_column))
@@ -954,6 +1030,7 @@ void CSVSerializeFunction::StringStreamSequence::csv_write_line(
         {
           if(header.at(i) == column_name)
           {
+            has_children = true;
             line.resize(i);
             if(level == (headers.size()-1))
             {
@@ -964,7 +1041,10 @@ void CSVSerializeFunction::StringStreamSequence::csv_write_line(
               csv_write_line(store_column, line, level+1);
             }
             if(line.size() >= header.size())
+            {
+              check_foreign_input(children);
               return;
+            }
             break;
           }
           else if((i+1)<header.size() && level)
@@ -976,28 +1056,78 @@ void CSVSerializeFunction::StringStreamSequence::csv_write_line(
             if(l<level)
               break;
           }
+          if(!csv_options.ignore_foreign_input)
+          {
+            std::stringstream lSs;
+            String    foreign_input;
+            Item element_name;
+            store_column.getNodeName(element_name);
+            foreign_input = "element node ";
+            foreign_input += element_name.getStringValue();
+            lSs << "The structure of the input rows does not correspond to the header. "
+              "Foreign item discovered:" << foreign_input;
+            Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "ForeignInput");
+            throw USER_EXCEPTION( lQName, lSs.str());
+          }
         }
       }
       else if(column_kind == store::StoreConsts::textNode)
       {
         unsigned int l;
+        String text_string = store_column.getStringValue();
+        zfn::trim( text_string );
         for(l=level;l<headers.size();l++)
           if(!headers.at(l)[line.size()].empty())
             break;
         if(l<headers.size())
+        {
+          if(!csv_options.ignore_foreign_input)
+          {
+            if(!text_string.empty())
+            {
+              std::stringstream lSs;
+              String    foreign_input;
+              foreign_input = "text node ";
+              foreign_input += text_string;
+              lSs << "The structure of the input rows does not correspond to the header. "
+                "Foreign item discovered:" << foreign_input;
+              Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "ForeignInput");
+              throw USER_EXCEPTION( lQName, lSs.str());
+            }
+          }
           continue;//not a place for text
+        }
         if(line.size() >= header.size())
+        {
+          if(!csv_options.ignore_foreign_input)
+          {
+            if(!text_string.empty())
+            {
+              std::stringstream lSs;
+              String    foreign_input;
+              foreign_input = "text node ";
+              foreign_input += text_string;
+              lSs << "The structure of the input rows does not correspond to the header. "
+                "Foreign item discovered:" << foreign_input;
+              Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "ForeignInput");
+              throw USER_EXCEPTION( lQName, lSs.str());
+            }
+          }
           return;
-        String text_string = store_column.getStringValue();
-        zfn::trim( text_string );
+        }
         if(!text_string.empty())
         {
+          has_children = true;
           line.push_back(text_string);
         }
       }
     }
   }
   children->close();
+  if(headers.size() && !has_children)
+  {//have to add something
+    line.push_back("");
+  }
 }
 
 
@@ -1158,13 +1288,8 @@ bool CSVSerializeFunction::StringStreamSequence::isOpen() const
 
 bool CSVSerializeFunction::StringStreamSequence::next( Item &result )
 {
-  if(!is_open)
-  {
-    std::stringstream lSs;
-    lSs << "Next called on CSVSerializeFunction::StringStreamSequence iterator that is not open";
-    Item lQName = CSVModule::getItemFactory()->createQName(CSVModule::theModule, "CSV004");
-    throw USER_EXCEPTION( lQName, lSs.str());
-  }
+  assert(is_open);
+
   if(!has_next)
     return false;
   result = streamable_item;

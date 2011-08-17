@@ -39,18 +39,6 @@ declare namespace ver = "http://www.zorba-xquery.com/options/versioning";
 declare option ver:module-version "1.0";
 
 (:~
- : Errors namespace URI.
-:)
-declare variable $csv:csvNS as xs:string := "http://www.zorba-xquery.com/modules/converters/csv";
-
-(:~
- : Error code for wrong parameter situations.<br/>
- : Possible error messages:<br/>
- : * "Options field must be of element options instead of ..."<br/>
-:)
-declare variable $csv:errWrongParam as xs:QName := fn:QName($csv:csvNS, "csv:WrongParam");
-
-(:~
  : Parse a CSV or fixed size text and convert to XML.<br/>
  : By default each line is converted to a &lt;row> element, and each field to a &lt;column> element inside &lt;row>.<br/>
  : The format of the param $options is:<br/>
@@ -154,6 +142,10 @@ declare variable $csv:errWrongParam as xs:QName := fn:QName($csv:csvNS, "csv:Wro
  :        &lt;/Name><br/>
  :        &lt;Occupation>student&lt;/Occupation><br/>
  :        &lt;/row></i><br/>
+ :        <br/>
+ :        This element can have an attribute "accept-all-lines" with values "false" or "true" (default "false").
+ :        When set to true it tells the parser to not report lines that do not have the same number of items as 
+ :        the header. If set to false, the parser will raise a csv:WrongInput error for these lines.<br/>
  :     </dd>
  :     <dt><b>start-from-row</b></dt>
  :     <dd>If the data does not start from line 1 or immediately after the header, 
@@ -189,9 +181,13 @@ declare variable $csv:errWrongParam as xs:QName := fn:QName($csv:csvNS, "csv:Wro
  :    </dl>
  : @param $csv the string containing the csv or fixed size text.
  : @param $options this parameter is validated against "http://www.zorba-xquery.com/modules/converters/csv-options" schema. 
- : If this parameter is not specified, the row name is by default "row" and the column name is by default "column". 
+ :    If this parameter is not specified, the row name is by default "row" and the column name is by default "column". 
  : @return a sequence of row elements, one for each line in csv
- : @error csv:WrongParam if the options parameter doesn't have the name "options".
+ : @error csv:CSV001 if the input string is streamable string and cannot be rewinded
+ : @error csv:WrongInput if the input string has lines with variable number of items, and the csv has headers and
+ :         the options do not specify the ignore-foreign-input attribute
+ : @error err:XQDY0027 if $options can not be validated against the csv-options schema
+ : @error err:XQDY0084 if the options parameter doesn't have the name "csv-options:options".
  : @example test/Queries/converters/csv/csv_parse1.xq
  : @example test/Queries/converters/csv/csv_parse2.xq
  : @example test/Queries/converters/csv/csv_parse3.xq
@@ -202,7 +198,7 @@ declare variable $csv:errWrongParam as xs:QName := fn:QName($csv:csvNS, "csv:Wro
  : @example test/Queries/converters/csv/txt_parse8.xq
 :)
 declare function csv:parse($csv as xs:string,
-                                 $options as element(csv-options:options)?) as element()*
+                           $options as element(csv-options:options)?) as element()*
 {
   let $validated-options :=
   if(empty($options)) then
@@ -329,6 +325,9 @@ declare %private function csv:parse-internal($csv as xs:string,
  :				<br/>
  :        If first-row-is-header is not specified and the columns have a deeper hierarchy,
  :          only the first layer of columns is processed, and the fields are the string values of each column.<br/>
+ :        This element can have an attribute "ignore-foreign-input" with values "false" or "true" (default "false").
+ :        When set to true it tells the serializer to ignore elements that to not match the header names.
+ :        If set to false, the serializer will raise a csv:ForeignInput error for these elements.<br/>
  :     </dd>
  :    </dl>
  :
@@ -337,18 +336,22 @@ declare %private function csv:parse-internal($csv as xs:string,
  : @param $options The options parameter. See the function description for details. 
  : This parameter is validated against "http://www.zorba-xquery.com/modules/converters/csv-options" schema.
  : @return the csv or fixed size text as string containing all the lines
+ : @error csv:CSV003 if the serialize output is streamable string and cannot be reset
+ : @error csv:ForeignInput if there are input elements in subsequent rows that do not match the headers,
+ :    and the options specify first-row-is-header and do not specify the ignore-foreign-input attribute
+ : @error err:XQDY0027 if $options can not be validated against csv-options schema
+ : @error err:XQDY0084 if the options parameter doesn't have the name "csv-options:options".
  : @example test/Queries/converters/csv/csv_serialize1.xq
  : @example test/Queries/converters/csv/csv_serialize2.xq
  : @example test/Queries/converters/csv/csv_serialize3.xq
  : @example test/Queries/converters/csv/csv_serialize5.xq
  : @example test/Queries/converters/csv/csv_serialize6.xq
  : @example test/Queries/converters/csv/csv_parse_serialize6.xq
- : @example test/Queries/converters/csv/txt_serialize4.xq
  : @example test/Queries/converters/csv/txt_serialize6.xq
  : @example test/Queries/converters/csv/txt_parse_serialize6.xq
 :)
 declare function csv:serialize($xml as element()*,
-									$options as element(csv-options:options)?) as xs:string
+									             $options as element(csv-options:options)?) as xs:string
 {
   let $validated-options :=
   if(empty($options)) then
