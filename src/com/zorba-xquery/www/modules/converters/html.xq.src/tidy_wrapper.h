@@ -81,19 +81,15 @@ namespace zorba
       }
     };
     
-    static void checkOption(Bool ok)
-    {
-      if (ok != yes)
-      {
-        throw USER_EXCEPTION( zerr::ZXQP0003_INTERNAL_ERROR, "Could not set Tidy option" );
-      }
-    }
-    
     static void checkRC(int rc, const char* errMsg)
     {
       if (rc > 1)
       {
-        throw USER_EXCEPTION(zerr::ZXQP0003_INTERNAL_ERROR, errMsg );
+        zorba::Item lError = Zorba::getInstance(0)->getItemFactory()
+          ->createQName(
+            "http://www.zorba-xquery.com/modules/converters/html",
+            "InternalError");
+        throw USER_EXCEPTION(lError, errMsg );
       }
     }
     
@@ -104,10 +100,22 @@ namespace zorba
       if(toID < N_TIDY_OPTIONS)
       {
         ok = tidyOptSetValue(doc, toID, value);
-        checkOption(ok);
+        if (ok != yes)
+        {
+        zorba::Item lError = Zorba::getInstance(0)->getItemFactory()
+          ->createQName(
+              "http://www.zorba-xquery.com/modules/converters/html",
+              "TidyOption");
+          std::ostringstream lErrorMsg;
+          lErrorMsg << "Error setting tidy option '" << option 
+            << "' with value '" << value << "'";
+          throw USER_EXCEPTION(lError, lErrorMsg.str());
+        }
       }
       else
+      {
         return no;
+      }
       return ok;
     }
 

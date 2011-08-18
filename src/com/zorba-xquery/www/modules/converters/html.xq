@@ -34,38 +34,36 @@ module namespace html = "http://www.zorba-xquery.com/modules/converters/html";
 (:~
  : Import module for checking if html options element is validated.
  :)
-import module namespace schemaOptions = "http://www.zorba-xquery.com/modules/schema";
+import module namespace schema = "http://www.zorba-xquery.com/modules/schema";
 
-(:~
- : Contains the definitions of the html options element.
- :)
 import schema namespace html-options = "http://www.zorba-xquery.com/modules/converters/html-options";
+
+declare namespace err = "http://ww.w3.org/2005/xqt-errors";
 
 declare namespace ver = "http://www.zorba-xquery.com/options/versioning";
 declare option ver:module-version "1.0";
-
-(:~
- : Errors namespace URI.
-:)
-declare variable $html:htmlNS as xs:string := "http://www.zorba-xquery.com/modules/converters/html";
-
-(:~
- : Error code for wrong parameter situations.<br/>
- : Possible error messages:<br/>
- : * "Options are not set correctly."<br/>
-:)
-declare variable $html:errWrongParam as xs:QName := fn:QName($html:htmlNS, "html:errWrongParam");
 
 (:~
  : <p>This function tidies the given HTML string and returns
  : a valid XHTML document node.</p>
  :
  : <p>This functions automatically sets the following tidying parameters:
- : <ul><li>output-xml:yes</li><li>doctype:omit</li><li>quote-nbsp:no</li>
- :     <li>char-encoding:utf8</li><li>newline:LF</li><li>tidy-mark:no</li></ul></p>
+ :   <ul>
+ :    <li>output-xml=yes</li>
+ :    <li>doctype=omit</li>
+ :    <li>quote-nbsp=no</li>
+ :    <li>char-encoding=utf8</li>
+ :    <li>newline=LF</li>
+ :    <li>tidy-mark=no</li>
+ :   </ul>
+ : </p>
  :
  : @param $html the HTML string to tidy
- : @return the tidied XHTML document node
+ : @return the tidied XML document
+ :
+ : @error html:InternalError if an internal error occurred while tidying
+ :  the string.
+ :
  : @example test_html/Queries/converters/html/tidy_2.xq
  :)
 declare function html:parse (
@@ -73,6 +71,7 @@ declare function html:parse (
 ) as document-node()
 {
   let $validated-options := 
+    validate {
           <options xmlns="http://www.zorba-xquery.com/modules/converters/html-options" >
               <tidyParam name="output-xml" value="yes" />
               <tidyParam name="doctype" value="omit" />
@@ -81,6 +80,7 @@ declare function html:parse (
               <tidyParam name="newline" value="LF" />
               <tidyParam name="tidy-mark" value="no" />
             </options>
+    }
   return
     html:parse-internal($html, $validated-options)
 };
@@ -100,7 +100,15 @@ declare function html:parse (
  :        to configure the tidy process that have to be validated against the 
  :        "http://www.zorba-xquery.com/modules/converters/html-options" schema.
  : @return the tidied XHTML document node
- : @error $html:errWrongParam if the options were not set correctly.
+ :
+ : @error err:XQDY0027 if $options can not be validated against the
+ :  html-options schema
+ : @error html:TidyOption if there was an error with one of the options
+ :  in the $options parameter that couldn't have been caught by validating
+ :  against the schema
+ : @error html:InternalError if an internal error occurred while tidying
+ :  the string.
+ :
  : @example test_html/Queries/converters/html/tidy_1.xq
  :)
 declare function html:parse (
@@ -108,23 +116,15 @@ declare function html:parse (
   $options as element(html-options:options)
 ) as document-node()
 {
-  try {
-    let $validated-options := if(empty($options)) then
-                                $options
-                              else
-                                if(schemaOptions:is-validated($options)) then
-                                  $options
-                                else
-                                  validate{$options} 
-    return
-      html:parse-internal($html, $validated-options)
-  } catch *
-  {
-    fn:error($html:errWrongParam, "The html-options element is not valid.")
-  }
+  let $validated-options := if(schema:is-validated($options)) then
+                              $options
+                            else
+                              validate { $options } 
+  return
+    html:parse-internal($html, $validated-options)
 };
 
 declare %private function html:parse-internal(
   $html as xs:string,
   $options as element(html-options:options)
-  ) as document-node() external;
+) as document-node() external;

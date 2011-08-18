@@ -1,1 +1,1 @@
-Error: http://www.zorba-xquery.com/modules/converters/html:errWrongParam
+Error: http://www.zorba-xquery.com/modules/converters/html:TidyOption
