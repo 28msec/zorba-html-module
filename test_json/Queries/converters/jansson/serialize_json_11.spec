@@ -1,1 +1,1 @@
-Error: http://www.zorba-xquery.com/modules/converters/json:ZXQP0019
+Error: http://www.zorba-xquery.com/modules/converters/json:InvalidXDM

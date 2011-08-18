@@ -15,6 +15,7 @@
  */
 
 #include <sstream>
+#include <cassert>
 
 #include <zorba/empty_sequence.h>
 #include <zorba/singleton_item_sequence.h>
@@ -103,19 +104,18 @@ ParseFunction::evaluate(
     lJsonMapping = getOptionValue(lOptionsItem, lOptionName.c_str());
 
     if(lJsonMapping == "simple-json")
-      JSON_parse(lStringItem.getStringValue().c_str(), lSs, lErrorLogSs);
-    else if(lJsonMapping == "json-ml")
-      JSON_ML_parse(lStringItem.getStringValue().c_str(), lSs, lErrorLogSs);
-    else
     {
-      zorba::Item lError = theModule->getItemFactory()->createQName(theModule->getURI(), "WrongParam");
-      lErrorLogSs << "Mapping type '" << lJsonMapping << "' not supported.\nPossible values are 'simple-json' or 'json-ml'.";
-      throw USER_EXCEPTION(lError, lErrorLogSs.str());
+      JSON_parse(lStringItem.getStringValue().c_str(), lSs, lErrorLogSs);
+    }
+    else // if(lJsonMapping == "json-ml")
+    {
+      assert(lJsonMapping == "json-ml"); // the schema makes sure that this is the case
+      JSON_ML_parse(lStringItem.getStringValue().c_str(), lSs, lErrorLogSs);
     }
 
     if(!lErrorLogSs.str().empty())
     {
-      zorba::Item lError = theModule->getItemFactory()->createQName(theModule->getURI(), "WrongParam");
+      zorba::Item lError = theModule->getItemFactory()->createQName(theModule->getURI(), "ParseError");
       throw USER_EXCEPTION(lError, lErrorLogSs.str());
     }
 
@@ -146,8 +146,10 @@ void SerializeFunction::StringStreamSequence::open()
   {
     is->seekg(0);
     if(is->fail())
-      throw USER_EXCEPTION(theFactory->createQName("http://www.zorba-xquery.com/modules/converters/json", "ZXQP0019"),
-                           "Cannot reset Json SerializeFunction streamable string item");
+      throw USER_EXCEPTION(theFactory->createQName(
+            "http://www.zorba-xquery.com/modules/converters/json",
+            "InvalidStream"),
+            "Cannot reset streamable string item");
   }
   open_count++;
 }
@@ -164,9 +166,7 @@ bool SerializeFunction::StringStreamSequence::isOpen() const
 
 bool SerializeFunction::StringStreamSequence::next( Item &result )
 {
-  if(!is_open)
-    throw USER_EXCEPTION(theFactory->createQName("http://www.zorba-xquery.com/modules/converters/json", "ZXQP0019"),
-                         "Next called on Json SerializeFunction::StringStreamSequence iterator that is not open");
+  assert(is_open);
 
   if(!has_next)
     return false;
@@ -188,8 +188,13 @@ bool SerializeFunction::StringStreamSequence::next(std::string &result_string)
     JSON_ML_serialize(node_item, lSs, lErrorLogSs);
 
   if(!lErrorLogSs.str().empty())
-    throw USER_EXCEPTION(theFactory->createQName("http://www.zorba-xquery.com/modules/converters/json", "ZXQP0019"),
-                         lErrorLogSs.str());
+  {
+    throw USER_EXCEPTION(
+        theFactory->createQName(
+          "http://www.zorba-xquery.com/modules/converters/json",
+          "InvalidXDM"),
+          lErrorLogSs.str());
+  }
 
   result_string = lSs.str();
   return true;
