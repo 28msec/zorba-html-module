@@ -1327,9 +1327,25 @@ bool CSVSerializeFunction::StringStreamSequence::next(std::string &result_string
     }
     csv_options.first_row_is_header = 0;
   }
-  line.clear();
-  csv_write_line(node_item,
+  
+  while(1)
+  {
+    line.clear();
+    csv_write_line(node_item,
                       line, 0);
+    if(csv_options.column_positions.size() == 0)
+      break;//for csv don't ignore empty lines
+    unsigned int i;
+    for(i=0;i<line.size();i++)
+    {
+      if(!line.at(i).empty())
+        break;
+    }
+    if(i != line.size())
+      break;
+    if(!input_iter->next(node_item))
+      return false;
+  }
 
   //std::string line_string;
   if(csv_options.column_positions.size() == 0)
