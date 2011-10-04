@@ -33,6 +33,7 @@ ELSE (ZORBA_SUPPRESS_LIBTIDY)
     DECLARE_ZORBA_MODULE (URI "http://www.zorba-xquery.com/modules/converters/html" VERSION 1.0 FILE "html.xq" LINK_LIBRARIES "${LIBTIDY_LIBRARIES}")
     ADD_TEST_DIRECTORY ("${PROJECT_SOURCE_DIR}/test_html")
 
+    ADD_TEST(link_crawler_test_for_compilation "${ZORBA_EXE}" -f -q "${CMAKE_CURRENT_SOURCE_DIR}/../../../../../../test_html/Queries/converters/html/link_crawler2.xq2" --compile-only)
   ELSE (LIBTIDY_FOUND)
     MESSAGE (STATUS "LibTidy library not found -- if you want to use HTML Tidy functionality please set LIBTIDY_INCLUDE_DIR and LIBTIDY_LIBRARIES cmake parameters.")
   ENDIF (LIBTIDY_FOUND)
@@ -61,6 +62,11 @@ ELSE (ZORBA_SUPPRESS_JANSSON)
     DECLARE_ZORBA_MODULE (URI "http://www.zorba-xquery.com/modules/converters/json" VERSION 1.0 FILE "json.xq" LINK_LIBRARIES "${Jansson_LIBRARIES}")
     ADD_TEST_DIRECTORY ("${PROJECT_SOURCE_DIR}/test_json")
 
+    IF(ZORBA_NO_UNICODE)
+      SET_TESTS_PROPERTIES(zorba_data-converters_module/converters/jansson/parse_json_03.xq
+                          PROPERTIES WILL_FAIL TRUE)
+    ENDIF(ZORBA_NO_UNICODE)
+
   ELSE (Jansson_FOUND)
     MESSAGE (STATUS "Jansson library not found -- if you want to use Json functionality please set Jansson_INCLUDE_DIRS and Jansson_LIBRARIES cmake parameters.")
   ENDIF (Jansson_FOUND)
@@ -86,3 +92,9 @@ SET_TARGET_PROPERTIES (StreambufUnitTests PROPERTIES
 
 ADD_TEST ("streamable_string_streambuf" StreambufUnitTests "streambuftest")
 ADD_TEST_DIRECTORY("${PROJECT_SOURCE_DIR}/test")
+
+IF(ZORBA_NO_UNICODE)
+  SET_TESTS_PROPERTIES(zorba_data-converters_module/converters/csv/csv_parse_utf8_11.xq
+                      PROPERTIES WILL_FAIL TRUE)
+ENDIF(ZORBA_NO_UNICODE)
+
