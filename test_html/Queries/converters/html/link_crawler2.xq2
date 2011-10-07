@@ -57,13 +57,17 @@ let $sb := fn:substring-before($s1, $s2)
 return  if($sb = "") then  $s1 else $sb
 };
 
-declare function local:get-real-link($href as xs:string, $start-uri as xs:string) as xs:string?
+declare %ann:sequential function local:get-real-link($href as xs:string, $start-uri as xs:string) as xs:string?
 {
+   variable $absuri;
    try{
-    local:my-substring-before(resolve-uri(fn:normalize-space($href), $start-uri), "#")
+    $absuri := local:my-substring-before(resolve-uri(fn:normalize-space($href), $start-uri), "#");
    }
-   catch*
-   { () }
+   catch *
+   { 
+     map:insert($local:processed-external-links, fn:concat("malformed, referenced in page ", $start-uri), $href);
+   }
+   $absuri
 };
 
 
@@ -80,7 +84,7 @@ declare function local:alive($http-call as item()*) as xs:boolean
 };
 
 
-declare function local:get-out-links-parsed($content as node()*, $uri as xs:string) as xs:string*
+declare %ann:sequential function local:get-out-links-parsed($content as node()*, $uri as xs:string) as xs:string*
 {  distinct-values( for $y in  ($content//*:a/string(@href),
                               $content//*:link/string(@href),
                               $content//*:script/string(@src),
@@ -91,7 +95,7 @@ return  local:get-real-link($y, $uri))
 };
 
 
-declare function local:get-out-links-unparsed($content as xs:string, $uri as xs:string) as xs:string*{
+declare %ann:sequential function local:get-out-links-unparsed($content as xs:string, $uri as xs:string) as xs:string*{
 
       distinct-values( 
          let $search := fn:analyze-string($content, "(&lt;|&amp;lt;|<)(((a|link|area).+?href)|((script|img).+?src))=([""'])(.*?)\7")
