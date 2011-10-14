@@ -31,7 +31,7 @@ xquery version "3.0";
   : <p>Both types of functions are available to parse and serialize two
   : types of XDM-JSON mappings:<ul><li>the first mapping called in this document 
   : <strong>simple XDM-JSON</strong> has been
-  : <a href="http://snelson.org.uk/archives/2008/02/parsing_json_in.php#more">
+  : <a href="http://john.snelson.org.uk/parsing-json-into-xquery">
   : proposed by John Snelson</a></li><li>the second mapping is called 
   : <a href="http://jsonml.org/">JsonML</a></li></ul>In the following, we
   : briefly describe both mappings.</p>
@@ -62,7 +62,7 @@ xquery version "3.0";
   : @author Sorin Nasoi
   : @library <a href="http://www.digip.org/jansson/">Jansson library for encoding, decoding and manipulating JSON data</a>
   :
-  : @see <a href="http://snelson.org.uk/archives/2008/02/parsing_json_in.php#more">Mapping proposed by John Snelson</a>
+  : @see <a href="http://john.snelson.org.uk/parsing-json-into-xquery">Mapping proposed by John Snelson</a>
   : @see <a href="http://jsonml.org" target="_blank">JSonML</a>
   : @see <a href="http://www.digip.org/jansson/doc/2.0/">Jansson library for encoding, decoding and manipulating JSON data</a>
   : @project data processing/data converters
