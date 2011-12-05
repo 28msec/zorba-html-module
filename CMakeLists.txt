@@ -36,4 +36,6 @@ INCLUDE ("${Zorba_USE_FILE}")
 
 ADD_SUBDIRECTORY("src")
 
+EXPECTED_FAILURE(zorba_data-converters_module/converters/jansson/serialize_json_18.xq 900462)
+
 DONE_DECLARING_ZORBA_URIS()
