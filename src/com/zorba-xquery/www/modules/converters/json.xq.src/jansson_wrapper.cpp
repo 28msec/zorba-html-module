@@ -473,8 +473,8 @@ void JSON_serialize(
     aResultSs << "[";
 
   serialize_child(aElement, aResultSs, aErrorLogSs, "object");
-
-  if(!aErrorLogSs.str().empty())
+  
+  if(aErrorLogSs.str().empty())
   {
     if(lType == "object")
       aResultSs << "}";
