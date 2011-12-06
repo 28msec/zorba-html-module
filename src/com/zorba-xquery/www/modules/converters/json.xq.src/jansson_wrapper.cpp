@@ -68,14 +68,16 @@ bool replace_all( std::string &s, char const *from, char const *to )
 void replace_special_chars(
      std::string &aValue)
 {
-  replace_all(aValue, "\"", "\\\"");  //quotation mark
-  replace_all(aValue, "\\", "\\\\");  //reverse solidus
-  replace_all(aValue, "/", "\\/");    //solidus
-  replace_all(aValue, "\b", "\\b" );  //backspace
-  replace_all(aValue, "\f", "\\f" );  //formfeed
-  replace_all(aValue, "\n", "\\n" );  //new line
-  replace_all(aValue, "\r", "\\r" );  //carriage return
-  replace_all(aValue, "\t", "\\t" );  //horizontal tab
+  replace_all(aValue, "\"", "\\\""  );  //quotation mark
+  replace_all(aValue, "\\", "\\\\"  );  //reverse solidus
+  replace_all(aValue, "/" , "\\/"   );  //solidus
+  replace_all(aValue, "\b", "\\b"   );  //backspace
+  replace_all(aValue, "\f", "\\f"   );  //formfeed
+  replace_all(aValue, "\n", "\\n"   );  //new line
+  replace_all(aValue, "\r", "\\r"   );  //carriage return
+  replace_all(aValue, "\t", "\\t"   );  //horizontal tab
+  replace_all(aValue, "<" , "&lt;"  );  // <
+  replace_all(aValue, ">" , "&gt;"  );  // >
 }
 
 static void parse_Json_value(
@@ -557,7 +559,7 @@ static void parse_JSON_ML_value(
     }
     default:
     {
-      zorba::String lType, lValue;
+      std::string lType, lValue;
       if(json_is_string(aValue))
       {
         lType  = "string";
@@ -591,6 +593,7 @@ static void parse_JSON_ML_value(
       else if(lParent.compare("object") == 0)
       {
         aSs << " " << lName << "=";
+        replace_special_chars(lValue);
         if(lType.compare("string") == 0)
           aSs << "\"" << lValue << "\"";
         else
