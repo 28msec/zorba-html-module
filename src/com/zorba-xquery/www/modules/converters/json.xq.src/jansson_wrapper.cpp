@@ -475,14 +475,11 @@ void JSON_serialize(
     aResultSs << "[";
 
   serialize_child(aElement, aResultSs, aErrorLogSs, "object");
-
-  if(!aErrorLogSs.str().empty())
-  {
-    if(lType == "object")
-      aResultSs << "}";
-    else
-      aResultSs << "]";
-  }
+  
+  if(lType == "object")
+    aResultSs << "}";
+  else
+    aResultSs << "]";
 }
 
 static void parse_JSON_ML_value(
