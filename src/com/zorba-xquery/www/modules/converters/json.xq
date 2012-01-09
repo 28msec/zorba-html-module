@@ -39,7 +39,7 @@ xquery version "3.0";
   : <h2>Simple XDM-JSON Mapping</h2>
   : <ul><li>In order to process JSON with XQuery, Zorba implements a mapping between
   : JSON and XML that was initially proposed by John Snelson in his article
-  : <a href="http://snelson.org.uk/archives/2008/02/parsing_json_in.php#more"
+  : <a href="http://john.snelson.org.uk/parsing-json-into-xquery"
   : target="_blank">Parsing JSON into XQuery</a></li></ul>
   :
   : <h2>JsonML Mapping</h2>
