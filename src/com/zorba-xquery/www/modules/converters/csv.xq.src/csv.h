@@ -117,7 +117,7 @@ class CSVParseFunction : public ContextualExternalFunction
     bool is_open;
     int open_count;
 
-    std::vector<std::pair<String, String> >   ns_binding;
+    NsBindings ns_binding;
     Item null_parent;
     zorba::Item   item_type;
     std::vector<std::string>  line;
