@@ -35,20 +35,8 @@
         </restriction>
       </simpleType>
     </attribute>
-    <attribute name="ignore-foreign-input" default="false">
-      <simpleType>
-        <restriction base="string">
-          <pattern value="true|false"/>
-        </restriction>
-      </simpleType>
-    </attribute>
-    <attribute name="accept-all-lines" default="false">
-      <simpleType>
-        <restriction base="string">
-          <pattern value="true|false"/>
-        </restriction>
-      </simpleType>
-    </attribute>
+    <attribute name="ignore-foreign-input" type="boolean" default="false"/>
+    <attribute name="accept-all-lines" type="boolean" default="false"/>
   </complexType>
   <complexType name="start-from-rowType">
     <attribute name="line">
