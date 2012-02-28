@@ -40,35 +40,6 @@ ELSE (ZORBA_SUPPRESS_LIBTIDY)
 ENDIF (ZORBA_SUPPRESS_LIBTIDY)
 MESSAGE (STATUS "")
 
-
-#
-# Jansson
-#
-IF (ZORBA_SUPPRESS_JANSSON)
-  MESSAGE (STATUS "ZORBA_SUPPRESS_JANSSON is true - not searching for Jansson.")
-ELSE (ZORBA_SUPPRESS_JANSSON)
-
-  MESSAGE (STATUS "Looking for Jansson")
-  FIND_PACKAGE (Jansson)
-     
-  IF (Jansson_FOUND)
-    MESSAGE (STATUS "Found Jansson library -- " ${Jansson_LIBRARIES})
-
-    SET (JSON_LINK_LIBRARIES ${Jansson_LIBRARIES})
-    INCLUDE_DIRECTORIES (${Jansson_INCLUDE_DIRS})
-    INCLUDE_DIRECTORIES ("json.xq.src")
-    DECLARE_ZORBA_SCHEMA (FILE "json-options.xsd"
-      URI "http://www.zorba-xquery.com/modules/converters/json-options")
-    DECLARE_ZORBA_MODULE (URI "http://www.zorba-xquery.com/modules/converters/json" VERSION 1.0 FILE "json.xq" LINK_LIBRARIES "${Jansson_LIBRARIES}")
-    ADD_TEST_DIRECTORY ("${PROJECT_SOURCE_DIR}/test_json")
-
-  ELSE (Jansson_FOUND)
-    MESSAGE (STATUS "Jansson library not found -- if you want to use Json functionality please set Jansson_INCLUDE_DIRS and Jansson_LIBRARIES cmake parameters.")
-  ENDIF (Jansson_FOUND)
-ENDIF (ZORBA_SUPPRESS_JANSSON)
-MESSAGE (STATUS "")
-
-
 # csv
 DECLARE_ZORBA_SCHEMA (FILE csv-options.xsd
   URI "http://www.zorba-xquery.com/modules/converters/csv-options")
