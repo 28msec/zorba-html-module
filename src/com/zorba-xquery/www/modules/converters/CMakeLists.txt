@@ -59,7 +59,3 @@ SET_TARGET_PROPERTIES (StreambufUnitTests PROPERTIES
 ADD_TEST ("streamable_string_streambuf" StreambufUnitTests "streambuftest")
 ADD_TEST_DIRECTORY("${PROJECT_SOURCE_DIR}/test")
 
-IF(ZORBA_NO_UNICODE)
-  SET_TESTS_PROPERTIES(zorba_data-converters_module/converters/csv/csv_parse_utf8_11.xq
-                      PROPERTIES WILL_FAIL TRUE)
-ENDIF(ZORBA_NO_UNICODE)
