@@ -14,7 +14,7 @@
 
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
-PROJECT (zorba_data-converters_module)
+PROJECT (zorba_html_module)
 ENABLE_TESTING ()
 INCLUDE (CTest)
 
