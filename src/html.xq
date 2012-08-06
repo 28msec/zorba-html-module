@@ -64,7 +64,7 @@ declare option ver:module-version "1.0";
  : @error html:InternalError if an internal error occurred while tidying
  :  the string.
  :
- : @example test_html/Queries/converters/html/tidy_2.xq
+ : @example test/Queries/tidy_2.xq
  :)
 declare function html:parse (
   $html as xs:string
@@ -109,7 +109,7 @@ declare function html:parse (
  : @error html:InternalError if an internal error occurred while tidying
  :  the string.
  :
- : @example test_html/Queries/converters/html/tidy_1.xq
+ : @example test/Queries/tidy_1.xq
  :)
 declare function html:parse (
   $html as xs:string,
