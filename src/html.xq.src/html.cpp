@@ -15,6 +15,7 @@
  */
 
 #include <sstream>
+#include <memory>
 
 #include <zorba/empty_sequence.h>
 #include <zorba/singleton_item_sequence.h>
@@ -25,8 +26,8 @@
 
 namespace zorba
 {
-  namespace htmlmodule
-  {
+namespace htmlmodule
+{
 
 //*****************************************************************************
 //*****************************************************************************
@@ -36,71 +37,79 @@ ParseFunction::ParseFunction(const HtmlModule* aModule)
 {
 }
 
+
 ItemSequence_t
 ParseFunction::evaluate(
-  const ExternalFunction::Arguments_t& aArgs,
-  const StaticContext*                          aSctxCtx,
-  const DynamicContext*                         aDynCtx) const
+    const ExternalFunction::Arguments_t& aArgs,
+    const StaticContext* aSctxCtx,
+    const DynamicContext* aDynCtx) const
+{
+  std::auto_ptr<std::istringstream> iss;
+  std::istream *is;
+  String docString;
+  Item lStringItem, lOptionsItem;
+
+  if (aArgs.size() >= 1)
   {
-    std::auto_ptr<std::istringstream> iss;
-    std::istream *is;
-    String docString;
-    Item lStringItem, lOptionsItem;
-
-    if (aArgs.size() >= 1)
-    {
-      Iterator_t lArg0Iter = aArgs[0]->getIterator();
-      lArg0Iter->open();
-      lArg0Iter->next(lStringItem);
-      lArg0Iter->close();
-    }
-
-    if ( lStringItem.isStreamable() )
-    {
-      //
-      // The "iss" auto_ptr can NOT be used since it will delete the stream that,
-      // in this case, is a data member inside another object and not dynamically
-      // allocated.
-      //
-      // We can't replace "iss" with "is" since we still need the auto_ptr for
-      // the case when the result is not streamable.
-      //
-      is = &lStringItem.getStream();
-    }
-    else
-    {
-      docString = lStringItem.getStringValue();
-      iss.reset (new std::istringstream(docString.c_str()));
-      is = iss.get();
-    }
-
-    if (aArgs.size() == 2)
-    {
-      Iterator_t lArg1Iter = aArgs[1]->getIterator();
-      lArg1Iter->open();
-      lArg1Iter->next(lOptionsItem);
-      lArg1Iter->close();
-    }
-
-    return ItemSequence_t(new SingletonItemSequence(
-      createHtmlItem( *is , lOptionsItem )));
+    Iterator_t lArg0Iter = aArgs[0]->getIterator();
+    lArg0Iter->open();
+    lArg0Iter->next(lStringItem);
+    lArg0Iter->close();
   }
 
-//*****************************************************************************
-//*****************************************************************************
+  if ( lStringItem.isStreamable() )
+  {
+    //
+    // The "iss" auto_ptr can NOT be used since it will delete the stream that,
+    // in this case, is a data member inside another object and not dynamically
+    // allocated.
+    //
+    // We can't replace "iss" with "is" since we still need the auto_ptr for
+    // the case when the result is not streamable.
+    //
+    is = &lStringItem.getStream();
+  }
+  else
+  {
+    docString = lStringItem.getStringValue();
+    iss.reset (new std::istringstream(docString.c_str()));
+    is = iss.get();
+  }
+  
+  if (aArgs.size() == 2)
+  {
+    Iterator_t lArg1Iter = aArgs[1]->getIterator();
+    lArg1Iter->open();
+    lArg1Iter->next(lOptionsItem);
+    lArg1Iter->close();
+  }
+  
+  return ItemSequence_t(
+  new SingletonItemSequence(createHtmlItem(*is, lOptionsItem)));
+}
 
-ItemFactory* HtmlModule::theFactory = 0;
+
+//*****************************************************************************
+//*****************************************************************************
+HtmlModule::HtmlModule()
+{
+  Zorba* engine = Zorba::getInstance(0);
+
+  theFactory = engine->getItemFactory();
+}
+
 
 HtmlModule::~HtmlModule()
 {
   for ( FuncMap_t::const_iterator lIter = theFunctions.begin();
         lIter != theFunctions.end();
         ++lIter)
-       {
-         delete lIter->second;
-       }
-       theFunctions.clear();
+  {
+    delete lIter->second;
+  }
+  theFunctions.clear();
 }
+
 
 ExternalFunction*
 HtmlModule::getExternalFunction(const String& aLocalname)
@@ -127,6 +136,8 @@ HtmlModule::destroy()
   }
   delete this;
 }
+
+
 //*****************************************************************************
 //*****************************************************************************
 

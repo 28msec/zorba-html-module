@@ -35,166 +35,176 @@
 
 namespace zorba
 {
-  namespace htmlmodule
+namespace htmlmodule
+{
+
+class TidyReader
+{
+private:
+  std::istream* theStream;
+  // We need a buffer to support the unget function
+  std::vector<unsigned int> theBuffer;
+
+public:
+  TidyReader(std::istream* aStream) : theStream(aStream) {}
+
+  TidyInputSource getInputSource()
   {
-    class TidyReader {
-    private:
-      std::istream* theStream;
-      // We need a buffer to support the unget function
-      std::vector<unsigned int> theBuffer;
-    public:
-      TidyReader(std::istream* aStream) : theStream(aStream) {}
-      TidyInputSource getInputSource()
-      {
-        TidyInputSource lResult;
-        lResult.sourceData = this;
-        lResult.getByte = &getByte;
-        lResult.ungetByte = &ungetByte;
-        lResult.eof = &isEof;
-        return lResult;
-      }
+    TidyInputSource lResult;
+    lResult.sourceData = this;
+    lResult.getByte = &getByte;
+    lResult.ungetByte = &ungetByte;
+    lResult.eof = &isEof;
+    return lResult;
+  }
       
-      public: // callback functions
-      static int TIDY_CALL getByte(void* aData)
-      {
-        TidyReader* lReader = static_cast<TidyReader*>(aData);
-        if (lReader->theBuffer.empty())
-          return lReader->theStream->get();
-        else
-        {
-          int lResult = lReader->theBuffer.back();
-          lReader->theBuffer.pop_back();
-          return lResult;
-        }
-      }
+public: // callback functions
+  static int TIDY_CALL getByte(void* aData)
+  {
+    TidyReader* lReader = static_cast<TidyReader*>(aData);
+    if (lReader->theBuffer.empty())
+      return lReader->theStream->get();
+    else
+    {
+      int lResult = lReader->theBuffer.back();
+      lReader->theBuffer.pop_back();
+      return lResult;
+    }
+  }
+  
+  static void TIDY_CALL ungetByte(void* aData, byte aByte)
+  {
+    TidyReader* lReader = static_cast<TidyReader*>(aData);
+    lReader->theBuffer.push_back(aByte);
+  }
       
-      static void TIDY_CALL ungetByte(void* aData, byte aByte)
-      {
-        TidyReader* lReader = static_cast<TidyReader*>(aData);
-        lReader->theBuffer.push_back(aByte);
-      }
-      
-      static Bool TIDY_CALL isEof(void* aData)
-      {
-        TidyReader* lReader = static_cast<TidyReader*>(aData);
-        return lReader->theStream->eof() ? yes : no;
-      }
-    };
+  static Bool TIDY_CALL isEof(void* aData)
+  {
+    TidyReader* lReader = static_cast<TidyReader*>(aData);
+    return lReader->theStream->eof() ? yes : no;
+  }
+};
     
-    static void checkRC(int rc, const char* errMsg)
-    {
-      if (rc > 1)
-      {
-        zorba::Item lError = Zorba::getInstance(0)->getItemFactory()
-          ->createQName(
-            "http://www.zorba-xquery.com/modules/converters/html",
-            "InternalError");
-        throw USER_EXCEPTION(lError, errMsg );
-      }
-    }
-    
-    static Bool setTidyOption(TidyDoc doc, const char* option, const char* value)
-    {
-      Bool ok = yes;
-      TidyOptionId toID = tidyOptGetIdForName(option);
-      if(toID < N_TIDY_OPTIONS)
-      {
-        ok = tidyOptSetValue(doc, toID, value);
-        if (ok != yes)
-        {
-        zorba::Item lError = Zorba::getInstance(0)->getItemFactory()
-          ->createQName(
-              "http://www.zorba-xquery.com/modules/converters/html",
-              "TidyOption");
-          std::ostringstream lErrorMsg;
-          lErrorMsg << "Error setting tidy option '" << option 
-            << "' with value '" << value << "'";
-          throw USER_EXCEPTION(lError, lErrorMsg.str());
-        }
-      }
-      else
-      {
-        return no;
-      }
-      return ok;
-    }
+  
+static void checkRC(int rc, const char* errMsg)
+{
+  if (rc > 1)
+  {
+    zorba::Item lError = Zorba::getInstance(0)->getItemFactory()->
+    createQName("http://www.zorba-xquery.com/modules/converters/html",
+                "InternalError");
 
-    static Bool applyOptions(TidyDoc aDoc, zorba::Item &aOptions)
-    {
-      zorba::Iterator_t lAttributes, lElements;
-      zorba::Item lAttr, lElementItem, lAttrName;
-      zorba::String lStrName, lStrValue;
-      Bool lRet = yes;
+    throw USER_EXCEPTION(lError, errMsg );
+  }
+}
+  
 
-      if(!aOptions.isNull())
-      {
-        lElements = aOptions.getChildren();
-        lElements->open();
-        while (lElements->next(lElementItem)
-          && lElementItem.getNodeKind () == store::StoreConsts::elementNode)
-        {
-          lAttributes = lElementItem.getAttributes();
-          lAttributes->open();
-          while (lAttributes->next(lAttr))
-          {
-            lAttr.getNodeName(lAttrName);
-            if(lAttrName.getLocalName() == "name")
-              lStrName = lAttr.getStringValue();
-            else if(lAttrName.getLocalName() == "value")
-              lStrValue = lAttr.getStringValue();
-          }
-          setTidyOption(aDoc, lStrName.c_str(), lStrValue.c_str());
-          lAttributes->close();
-        }
-        lElements->close();
-      }
-      return lRet;
+static Bool setTidyOption(TidyDoc doc, const char* option, const char* value)
+{
+  Bool ok = yes;
+  TidyOptionId toID = tidyOptGetIdForName(option);
+  if(toID < N_TIDY_OPTIONS)
+  {
+    ok = tidyOptSetValue(doc, toID, value);
+    if (ok != yes)
+    {
+      zorba::Item lError = Zorba::getInstance(0)->getItemFactory()->
+      createQName("http://www.zorba-xquery.com/modules/converters/html",
+                  "TidyOption");
+
+      std::ostringstream lErrorMsg;
+      lErrorMsg << "Error setting tidy option '" << option 
+                << "' with value '" << value << "'";
+      throw USER_EXCEPTION(lError, lErrorMsg.str());
     }
+  }
+  else
+  {
+    return no;
+  }
+  return ok;
+}
+  
 
-    static zorba::Item createHtmlItem( std::istream& aStream , zorba::Item &aOptions)
+static Bool applyOptions(TidyDoc aDoc, zorba::Item &aOptions)
+{
+  zorba::Iterator_t lAttributes, lElements;
+  zorba::Item lAttr, lElementItem, lAttrName;
+  zorba::String lStrName, lStrValue;
+  Bool lRet = yes;
+  
+  if(!aOptions.isNull())
+  {
+    lElements = aOptions.getChildren();
+    lElements->open();
+    while (lElements->next(lElementItem)
+           && lElementItem.getNodeKind () == store::StoreConsts::elementNode)
     {
-      TidyReader lReader(&aStream);
-      TidyInputSource lInputSource = lReader.getInputSource();
+      lAttributes = lElementItem.getAttributes();
+      lAttributes->open();
+      while (lAttributes->next(lAttr))
+      {
+        lAttr.getNodeName(lAttrName);
+        if(lAttrName.getLocalName() == "name")
+          lStrName = lAttr.getStringValue();
+        else if(lAttrName.getLocalName() == "value")
+          lStrValue = lAttr.getStringValue();
+      }
+      setTidyOption(aDoc, lStrName.c_str(), lStrValue.c_str());
+      lAttributes->close();
+    }
+    lElements->close();
+  }
+  return lRet;
+}
+
+
+static zorba::Item createHtmlItem(std::istream& aStream , zorba::Item& aOptions)
+{
+  TidyReader lReader(&aStream);
+  TidyInputSource lInputSource = lReader.getInputSource();
       
-      TidyBuffer output;
-      tidyBufInit(&output);
-      TidyBuffer errbuf;
-      tidyBufInit(&errbuf);
-      TidyDoc tDoc = tidyCreate();
+  TidyBuffer output;
+  tidyBufInit(&output);
+  TidyBuffer errbuf;
+  tidyBufInit(&errbuf);
+  TidyDoc tDoc = tidyCreate();
 
-      applyOptions(tDoc, aOptions);
+  applyOptions(tDoc, aOptions);
 
-      int rc = -1;
-      rc = tidySetErrorBuffer(tDoc, &errbuf);
-      checkRC(rc, "Could not set error buffer");
-      rc = tidyParseSource(tDoc, &lInputSource);
-      checkRC(rc, "Could not parse the source");
-      rc = tidyCleanAndRepair(tDoc);
-      checkRC(rc, "Could not clean and repair");
-      rc = tidyRunDiagnostics(tDoc);
-      if ( rc > 1 )
-        rc = ( tidyOptSetBool(tDoc, TidyForceOutput, yes) ? rc : -1 );
+  int rc = -1;
+  rc = tidySetErrorBuffer(tDoc, &errbuf);
+  checkRC(rc, "Could not set error buffer");
+  rc = tidyParseSource(tDoc, &lInputSource);
+  checkRC(rc, "Could not parse the source");
+  rc = tidyCleanAndRepair(tDoc);
+  checkRC(rc, "Could not clean and repair");
+  rc = tidyRunDiagnostics(tDoc);
+  if ( rc > 1 )
+    rc = ( tidyOptSetBool(tDoc, TidyForceOutput, yes) ? rc : -1 );
+  
+  // Tidy does not support streaming for output, it only supports
+  // something they call a "sink". Therefore we buffer it in a string.
+  rc = tidySaveBuffer(tDoc, &output);
+  checkRC(rc, "Could not save the buffer");
+  std::string lResult((char*) output.bp, output.size);
+  std::istringstream lStream(lResult);
 
-      // Tidy does not support streaming for output, it only supports
-      // something they call a "sink". Therefore we buffer it in a string.
-      rc = tidySaveBuffer(tDoc, &output);
-      checkRC(rc, "Could not save the buffer");
-      std::string lResult((char*) output.bp, output.size);
-      std::istringstream lStream(lResult);
+  tidyBufFree(&output);
+  tidyBufFree(&errbuf);
+  tidyRelease(tDoc);
+  XmlDataManager_t lDM = Zorba::getInstance(0)->getXmlDataManager();
+  try
+  {
+    return lDM->parseXML(lStream);
+  }
+  catch (ZorbaException&)
+  {
+    return NULL;//Zorba::getInstance(0)->getItemFactory()->createString(lResult);
+  }
+}
 
-      tidyBufFree(&output);
-      tidyBufFree(&errbuf);
-      tidyRelease(tDoc);
-      XmlDataManager* lDM = Zorba::getInstance(0)->getXmlDataManager();
-      try
-      {
-        return lDM->parseXML(lStream);
-      } catch (ZorbaException&)
-      {
-        return NULL;//Zorba::getInstance(0)->getItemFactory()->createString(lResult);
-      }
-    }
-  } /* namespace htmlmodule */
+} /* namespace htmlmodule */
 } /* namespace zorba */
 
 #endif //ZORBA_HTMLMODULE_TIDY_WRAPPER_H

@@ -26,87 +26,85 @@ namespace zorba
 {
   namespace htmlmodule
   {
+
 //*****************************************************************************
 //*****************************************************************************
-    class HtmlModule : public ExternalModule
+class HtmlModule : public ExternalModule
+{
+protected:
+  class ltstr
+  {
+  public:
+    bool operator()(const String& s1, const String& s2) const
     {
-    private:
-      static ItemFactory* theFactory;
+      return s1.compare(s2) < 0;
+    }
+  };
 
-    protected:
-      class ltstr
-      {
-      public:
-        bool operator()(const String& s1, const String& s2) const
-        {
-          return s1.compare(s2) < 0;
-        }
-      };
+  typedef std::map<String, ExternalFunction*, ltstr> FuncMap_t;
 
-      typedef std::map<String, ExternalFunction*, ltstr> FuncMap_t;
+protected:
+  ItemFactory      * theFactory;
+  XmlDataManager_t   theDataMgr;
+  FuncMap_t          theFunctions;
 
-      FuncMap_t theFunctions;
+public:
+  HtmlModule();
 
-    public:
-      virtual ~HtmlModule();
+  virtual ~HtmlModule();
 
-      virtual String
-      getURI() const { return "http://www.zorba-xquery.com/modules/converters/html"; }
+  virtual String
+  getURI() const { return "http://www.zorba-xquery.com/modules/converters/html"; }
 
-      virtual ExternalFunction*
-      getExternalFunction(const String& aLocalname);
+  virtual ExternalFunction*
+  getExternalFunction(const String& aLocalname);
 
-      virtual void
-      destroy();
+  virtual void
+  destroy();
 
-      static ItemFactory*
-      getItemFactory()
-      {
-        if(!theFactory)
-        {
-          theFactory = Zorba::getInstance(0)->getItemFactory();
-        }
-        return theFactory;
-      }
-    };
+  ItemFactory* getItemFactory() const { return theFactory; }
+
+  XmlDataManager* getDataMgr() const { return theDataMgr.get(); }
+};
+
 
 //*****************************************************************************
 //*****************************************************************************
-    class HtmlFunction : public ContextualExternalFunction
-    {
-    protected:
-      const HtmlModule* theModule;
-    public:
-      HtmlFunction(const HtmlModule* aModule)
-      : theModule(aModule) {};
+class HtmlFunction : public ContextualExternalFunction
+{
+protected:
+  const HtmlModule* theModule;
 
-      ~HtmlFunction() {};
+public:
+  HtmlFunction(const HtmlModule* aModule) : theModule(aModule) {};
 
-      virtual String
-      getURI() const { return theModule->getURI(); }
+  ~HtmlFunction() {};
 
-    };
+  virtual String
+  getURI() const { return theModule->getURI(); }
+};
+
 
 //*****************************************************************************
 //*****************************************************************************
-    class ParseFunction : public HtmlFunction
-    {
-    public:
-      ParseFunction(const HtmlModule* aModule);
+class ParseFunction : public HtmlFunction
+{
+public:
+  ParseFunction(const HtmlModule* aModule);
 
-      virtual String
-      getLocalName() const { return "parse-internal"; }
+  virtual String
+  getLocalName() const { return "parse-internal"; }
 
-      virtual ItemSequence_t
-      evaluate(const ExternalFunction::Arguments_t& args,
-               const StaticContext* aSctxCtx,
-               const DynamicContext* aDynCtx) const;
-    };
-
-
+  virtual ItemSequence_t
+  evaluate(const ExternalFunction::Arguments_t& args,
+           const StaticContext* aSctxCtx,
+           const DynamicContext* aDynCtx) const;
+};
 
 
-  } /* namespace htmlmodule */ 
+
+
+} /* namespace htmlmodule */ 
 } /* namespace zorba */
 
 #endif /* ZORBA_HTMLMODULE_HTML_H */

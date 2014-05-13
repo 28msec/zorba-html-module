@@ -26,7 +26,7 @@ xquery version "3.0";
  :
  : @author Sorin Nasoi
  : @library <a href="http://tidy.sourceforge.net/">Tidy C++ Library</a>
- : @project data processing/data converters
+ : @project Zorba/Data Converters/HTML
  :
  :)
 module namespace html = "http://www.zorba-xquery.com/modules/converters/html";
@@ -34,13 +34,13 @@ module namespace html = "http://www.zorba-xquery.com/modules/converters/html";
 (:~
  : Import module for checking if html options element is validated.
  :)
-import module namespace schema = "http://www.zorba-xquery.com/modules/schema";
+import module namespace schema = "http://zorba.io/modules/schema";
 
 import schema namespace html-options = "http://www.zorba-xquery.com/modules/converters/html-options";
 
 declare namespace err = "http://ww.w3.org/2005/xqt-errors";
 
-declare namespace ver = "http://www.zorba-xquery.com/options/versioning";
+declare namespace ver = "http://zorba.io/options/versioning";
 declare option ver:module-version "1.0";
 
 (:~
