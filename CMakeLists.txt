@@ -12,6 +12,12 @@
 # See the License for the specific language governing permissions and
 # limitations under the License.
 
+MESSAGE(STATUS "")
+MESSAGE(STATUS "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
+MESSAGE(STATUS "Configuring external module <html>")
+MESSAGE(STATUS "-------------------------------------------------------------")
+MESSAGE(STATUS "")
+
 CMAKE_MINIMUM_REQUIRED(VERSION 2.6)
 
 PROJECT (zorba_html_module)
@@ -33,6 +39,47 @@ FIND_PACKAGE (Zorba REQUIRED HINTS "${ZORBA_BUILD_DIR}")
 MESSAGE(STATUS "Zorba_USE_FILE ${Zorba_USE_FILE}")
 INCLUDE ("${Zorba_USE_FILE}")
 
-ADD_SUBDIRECTORY("src")
+#
+# LibTidy
+#
+IF (ZORBA_SUPPRESS_LIBTIDY)
+  MESSAGE (STATUS "ZORBA_SUPPRESS_LIBTIDY is true - not searching for LibTidy.")
+  
+  MESSAGE(STATUS "")
+  MESSAGE(STATUS "-------------------------------------------------------------")  
+  MESSAGE(STATUS "Configuration SUPPRESSED for external module <html>")
+  
+ELSE (ZORBA_SUPPRESS_LIBTIDY)
+
+  MESSAGE (STATUS "Looking for LibTidy")
+  FIND_PACKAGE (LibTidy)
+  
+  IF (LIBTIDY_FOUND)
+    MESSAGE (STATUS "Found LibTidy library -- " ${LIBTIDY_LIBRARIES})
+    SET (HTML_LINK_LIBRARIES ${LIBTIDY_LIBRARIES})
+
+    INCLUDE_DIRECTORIES (${LIBTIDY_INCLUDE_DIR})
+    INCLUDE_DIRECTORIES ("html.xq.src")
+    
+    ADD_SUBDIRECTORY("src")    
+    ADD_TEST_DIRECTORY ("${PROJECT_SOURCE_DIR}/test")
+
+    ADD_TEST(zorba_html_module/link_crawler_test_for_compilation "${ZORBA_EXE}" -f -q "${PROJECT_SOURCE_DIR}/test/Queries/link_crawler2.xq2" --compile-only)
+    
+    MESSAGE(STATUS "")
+    MESSAGE(STATUS "-------------------------------------------------------------")
+    MESSAGE(STATUS "Configuration SUCCEEDED for external module <html>")
+    
+  ELSE (LIBTIDY_FOUND)
+    MESSAGE (STATUS "LibTidy library not found -- if you want to use HTML Tidy functionality please set LIBTIDY_INCLUDE_DIR and LIBTIDY_LIBRARIES cmake parameters.")
+    SET_PROPERTY (GLOBAL PROPERTY ZORBA_PROJECT_UNAVAILABLE 1)
+    
+    MESSAGE(STATUS "")
+    MESSAGE(STATUS "-------------------------------------------------------------")  
+    MESSAGE(STATUS "Configuration FAILED for external module <html>")
+    
+  ENDIF (LIBTIDY_FOUND)
+ENDIF (ZORBA_SUPPRESS_LIBTIDY)
 
 DONE_DECLARING_ZORBA_URIS()
+MESSAGE(STATUS "+++++++++++++++++++++++++++++++++++++++++++++++++++++++++++++")
